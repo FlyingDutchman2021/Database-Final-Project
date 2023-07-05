@@ -48,6 +48,9 @@ class MultiViewSystem:
 
         # Create Button
         self.button01 = tk.Button(master=self.window, text='Search', padx=50, pady=15, font='Arial, 28')
+        self.button02 = tk.Button(master=self.window, text='Insert', padx=50, pady=15, font='Arial, 28')
+        self.button03 = tk.Button(master=self.window, text='Delete', padx=50, pady=15, font='Arial, 28')
+        self.button04 = tk.Button(master=self.window, text='Update', padx=50, pady=15, font='Arial, 28')
 
         # Create Entry Frame
         self.entry_frame = tk.Frame(self.window)
@@ -84,8 +87,10 @@ class MultiViewSystem:
                                             font='Arial, 20', width=10)
 
         # Link Button and Entry Value and functions
-        self.button01.configure(command=lambda: self.search())
-
+        self.button01.configure(command=lambda: self.search_student())
+        self.button02.configure(command=lambda: self.insert_student())
+        self.button03.configure(command=lambda: self.delete_student())
+        self.button04.configure(command=lambda: self.update_student())
         # Pack
 
         # Show Table
@@ -94,6 +99,9 @@ class MultiViewSystem:
         self.tree.pack(side='left', padx=5, pady=15)
         # Show Button
         self.button01.pack()
+        self.button02.pack()
+        self.button03.pack()
+        self.button04.pack()
 
         # Show Entry
         self.entry_frame.pack()
@@ -122,8 +130,7 @@ class MultiViewSystem:
 
         self.window.mainloop()
 
-
-    def search(self):
+    def search_student(self):
         generated_id = self.student_id.get()
         name = self.student_name.get().title()
         sex = self.student_sex.get().title()
@@ -138,11 +145,11 @@ class MultiViewSystem:
             if generated_id:
                 if not has_constraint:
                     SQL += '''
-                    WHERE "Student ID" = '%s' ''' % id
+                    WHERE "Student ID" = '%s' ''' % generated_id
                     has_constraint = True
                 else:
                     SQL += '''
-                    AND "Student ID" = '%s' ''' % id
+                    AND "Student ID" = '%s' ''' % generated_id
             if name:
                 if has_constraint:
                     SQL += '''
@@ -185,6 +192,560 @@ class MultiViewSystem:
                 else:
                     SQL += '''
                     WHERE "Class" = '%s' ''' % s_class
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def search_teacher(self):
+        id = self.teacher_id.get()
+        name = self.teacher_name.get().title()
+        courses = self.teacher_courses.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            has_constraint = False
+            temp_cursor = db.cursor()
+            SQL = '''SELECT * From Teacher '''
+            if id:
+                if not has_constraint:
+                    SQL += '''
+                    WHERE "Teacher ID" = '%s' ''' % id
+                    has_constraint = True
+                else:
+                    SQL += '''
+                    AND "Teacher ID" = '%s' ''' % id
+            if name:
+                if has_constraint:
+                    SQL += '''
+                    AND "Name" = '%s' ''' % name
+                else:
+                    SQL += '''
+                    WHERE "Name" = '%s' ''' % name
+                    has_constraint = True
+            if courses:
+                if has_constraint:
+                    SQL += '''
+                    AND "Courses" = '%s' ''' % courses
+                else:
+                    SQL += '''
+                    WHERE "Courses" = '%s' ''' % courses
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def search_courses(self):
+        id = self.course_id.get()
+        name = self.course_name.get().title()
+        teacher_id = self.course_teacher_id.get()
+        credit = self.course_credit.get()
+        grade = self.course_grade.get().upper()
+        cancel_year = self.course_cancel_year.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            has_constraint = False
+            temp_cursor = db.cursor()
+            SQL = '''SELECT * From Courses '''
+            if id:
+                if not has_constraint:
+                    SQL += '''
+                    WHERE "Course ID" = '%s' ''' % id
+                    has_constraint = True
+                else:
+                    SQL += '''
+                    AND "Course ID" = '%s' ''' % id
+            if name:
+                if has_constraint:
+                    SQL += '''
+                    AND "Name" = '%s' ''' % name
+                else:
+                    SQL += '''
+                    WHERE "Name" = '%s' ''' % name
+                    has_constraint = True
+            if teacher_id:
+                if has_constraint:
+                    SQL += '''
+                    AND "Teacher ID" = '%s' ''' % teacher_id
+                else:
+                    SQL += '''
+                    WHERE "Teacher ID" = '%s' ''' % teacher_id
+            if credit:
+                if has_constraint:
+                    SQL += '''
+                    AND "Credit" = '%s' ''' % credit
+                else:
+                    SQL += '''
+                    WHERE "Credit" = '%s' ''' % credit
+            if grade:
+                if has_constraint:
+                    SQL += '''
+                    AND "Grade" = '%s' ''' % grade
+                else:
+                    SQL += '''
+                    WHERE "Grade" = '%s' ''' % grade
+            if cancel_year:
+                if has_constraint:
+                    SQL += '''
+                    AND "Canceled Year" = '%s' ''' % cancel_year
+                else:
+                    SQL += '''
+                    WHERE "Canceled Year" = '%s' ''' % cancel_year
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def search_course_choosing(self):
+        student_id = self.student_id.get()
+        course_id = self.course_id.get()
+        teacher_id = self.teacher_id.get()
+        score = self.score.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            has_constraint = False
+            temp_cursor = db.cursor()
+            SQL = '''SELECT * From Course_choosing '''
+            if student_id:
+                if not has_constraint:
+                    SQL += '''
+                    WHERE "Student ID" = '%s' ''' % student_id
+                    has_constraint = True
+                else:
+                    SQL += '''
+                    AND "Student ID" = '%s' ''' % student_id
+            if course_id:
+                if has_constraint:
+                    SQL += '''
+                    AND "Coures ID" = '%s' ''' % course_id
+                else:
+                    SQL += '''
+                    WHERE "Coures ID" = '%s' ''' % course_id
+                    has_constraint = True
+            if teacher_id:
+                if has_constraint:
+                    SQL += '''
+                    AND "Teacher ID" = '%s' ''' % teacher_id
+                else:
+                    SQL += '''
+                    WHERE "Teacher ID" = '%s' ''' % teacher_id
+            if score:
+                if has_constraint:
+                    SQL += '''
+                    AND "Score" = '%s' ''' % score
+                else:
+                    SQL += '''
+                    WHERE "Score" = '%s' ''' % score
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+
+
+
+    def insert_student(self):
+        generated_id = self.student_id.get()
+        name = self.student_name.get().title()
+        sex = self.student_sex.get().title()
+        age = self.student_age.get()
+        year = self.student_year.get()
+        s_class = self.student_class.get().upper()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Student VALUES( '''
+            SQL += '''
+                '%s',''' % generated_id
+            SQL += '''
+                '%s',''' % name
+            SQL += '''
+                '%s',''' % sex
+            SQL += '''
+                '%s',''' % age
+            SQL += '''
+                '%s',''' % year
+            SQL += '''
+                '%s')''' % s_class
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def insert_teacher(self):
+        id = self.teacher_id.get()
+        name = self.teacher_name.get().title()
+        courses = self.teacher_courses.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Teacher VALUES( '''
+            SQL += '''
+                '%s',''' % id
+            SQL += '''
+                '%s',''' % name
+            SQL += '''
+                '%s')''' % courses
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def insert_courses(self):
+        id = self.course_id.get()
+        name = self.course_name.get().title()
+        teacher_id = self.course_teacher_id.get()
+        credit = self.course_credit.get()
+        grade = self.course_grade.get().upper()
+        cancel_year = self.course_cancel_year.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Courses VALUES( '''
+            SQL += '''
+                '%s',''' % id
+            SQL += '''
+                '%s',''' % name
+            SQL += '''
+                '%s',''' % teacher_id
+            SQL += '''
+                '%s',''' % credit
+            SQL += '''
+                '%s',''' % grade
+            SQL += '''
+                '%s')''' % cancel_year
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def insert_course_choosing(self):
+        student_id = self.student_id.get()
+        course_id = self.course_id.get()
+        teacher_id = self.teacher_id.get()
+        score = self.score.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Courses_choosing VALUES( '''
+            SQL += '''
+                '%s',''' % student_id
+            SQL += '''
+                '%s',''' % course_id
+            SQL += '''
+                '%s',''' % teacher_id
+            SQL += '''
+                '0')'''
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+
+
+
+
+    def delete_student(self):
+        generated_id = self.student_id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Student WHERE "Student ID" = '%s' ''' % generated_id
+            #SQL += '''
+            #DELETE From Course_choosing WHERE "Student ID" = '%s' ''' % generated_id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def delete_teacher(self):
+        generated_id = self.teacher_id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Teacher WHERE "Teacher ID" = '%s' ''' % generated_id
+            SQL += '''
+            DELETE From Course_choosing WHERE "Teacher ID" = '%s' ''' % generated_id
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def delete_courses(self):
+        generated_id = self.course_id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Courses WHERE "Course ID" = '%s' ''' % generated_id
+            SQL += '''
+            DELETE From Course_choosing WHERE "Course ID" = '%s' ''' % generated_id
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def delete_course_choosing(self):
+        generated_id = self.stedent_id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Course_choosing WHERE "Student ID" = '%s' ''' % generated_id
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+
+
+
+
+    def update_student(self):
+        generated_id = self.student_id.get()
+        name = self.student_name.get().title()
+        sex = self.student_sex.get().title()
+        age = self.student_age.get()
+        year = self.student_year.get()
+        s_class = self.student_class.get().upper()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Student 
+            SET '''
+            if name:
+                SQL += '''
+                    "Name" = '%s',''' % name
+            if sex:
+                SQL += '''
+                    "Sex" = '%s',''' % sex
+            if age:
+                SQL += '''
+                    "Entrance Age" = '%s',''' % age
+            if year:
+                SQL += '''
+                    "Entrance Year" = '%s',''' % year
+            if s_class:
+                SQL += '''
+                    "Class" = '%s' ''' % s_class
+            SQL += '''
+            WHERE "Student ID" = '%s' ''' % generated_id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def update_teacher(self):
+        id = self.teacher_id.get()
+        name = self.teacher_name.get().title()
+        courses = self.teacher_courses.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Teacher 
+            SET '''
+            if name:
+                SQL += '''
+                    "Name" = '%s',''' % name
+            if courses:
+                SQL += '''
+                    "Courses" = '%s' ''' % courses
+            SQL += '''
+            WHERE "Teacher ID" = '%s' ''' % id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def update_Courses(self):
+        id = self.course_id.get()
+        name = self.course_name.get().title()
+        teacher_id = self.course_teacher_id.get()
+        credit = self.course_credit.get()
+        grade = self.course_grade.get().upper()
+        cancel_year = self.course_cancel_year.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Courses 
+            SET '''
+            if name:
+                SQL += '''
+                    "Name" = '%s',''' % name
+            if teacher_id:
+                SQL += '''
+                    "Teacher ID" = '%s',''' % teacher_id
+            if credit:
+                SQL += '''
+                    "Credit" = '%s',''' % credit
+            if grade:
+                SQL += '''
+                    "Grade" = '%s',''' % grade
+            if cancel_year:
+                SQL += '''
+                    "Canceled Year" = '%s' ''' % cancel_year
+
+            SQL += '''
+            WHERE "Course ID" = '%s' ''' % id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def update_Course_choosing(self):
+        student_id = self.student_id.get()
+        course_id = self.course_id.get()
+        teacher_id = self.teacher_id.get()
+        score = self.score.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Course_choosing 
+            SET '''
+            if student_id:
+                SQL += '''
+                    "Student ID" = '%s',''' % student_id
+            if course_id:
+                SQL += '''
+                    "Course ID" = '%s',''' % course_id
+            if teacher_id:
+                SQL += '''
+                    "Teacher ID" = '%s',''' % teacher_id
+
+            SQL += '''
+            WHERE "Course ID" = '%s' ''' % id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def update_Score(self):
+        student_id = self.student_id.get()
+        course_id = self.course_id.get()
+        teacher_id = self.teacher_id.get()
+        score = self.score.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Course_choosing 
+            SET "Score" = '%s' ''' % score
+            SQL += '''
+            WHERE "Student ID" = '%s' ''' % student_id
+            SQL += '''
+            AND "Course ID" = '%s' ''' % course_id
+            SQL += '''
+            AND "Teacher ID" = '%s' ''' % teacher_id
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(self.tree.get_children()) > 0:
+                for item in self.tree.get_children():
+                    self.tree.delete(item)
+            for temp_row in temp_result:
+                self.tree.insert('', 'end', values=temp_row)
+
+    def Average_score(self):
+        student_id = self.student_id.get()
+        s_class = self.student_class.get().upper()
+        course_id = self.course_id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            has_constraint = False
+            SQL = '''SELECT AVG(Score) From Student,Course_choosing '''
+            if student_id:
+                if not has_constraint:
+                    SQL += '''
+                    WHERE "Course_choosing.Student ID" = '%s' ''' % student_id
+                    has_constraint = True
+                else:
+                    SQL += '''
+                    AND "Course_choosing.Student ID" = '%s' ''' % student_id
+            if s_class:
+                if has_constraint:
+                    SQL += '''
+                    AND "Student.Class" = '%s'
+                    AND "Student.Student ID" = "Course_choosing.Student ID" ''' % s_class
+                else:
+                    SQL += '''
+                    AND "Student.Class" = '%s'
+                    AND "Student.Student ID" = "Course_choosing.Student ID" ''' % s_class
+                    has_constraint = True
+            if course_id:
+                if has_constraint:
+                    SQL += '''
+                    AND "Course ID" = '%s' ''' % course_id
+                else:
+                    SQL += '''
+                    AND "Course ID" = '%s' ''' % course_id
 
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
