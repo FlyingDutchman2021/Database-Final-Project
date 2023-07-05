@@ -125,7 +125,11 @@ class MultiViewSystem:
 
     def search(self):
         generated_id = self.student_id.get()
-        name = self.student_name.get()
+        name = self.student_name.get().title()
+        sex = self.student_sex.get().title()
+        age = self.student_age.get()
+        year = self.student_year.get()
+        s_class = self.student_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             has_constraint = False
@@ -134,20 +138,54 @@ class MultiViewSystem:
             if generated_id:
                 if not has_constraint:
                     SQL += '''
-                    WHERE "Student ID" = '%s' ''' % self.student_id.get()
+                    WHERE "Student ID" = '%s' ''' % id
                     has_constraint = True
                 else:
                     SQL += '''
-                    AND "Student ID" = '%s' ''' % self.student_id.get()
+                    AND "Student ID" = '%s' ''' % id
             if name:
                 if has_constraint:
                     SQL += '''
-                    AND "Name" = '%s' ''' % self.student_name.get()
+                    AND "Name" = '%s' ''' % name
                 else:
                     SQL += '''
-                    WHERE "Name" = '%s' ''' % self.student_name.get()
+                    WHERE "Name" = '%s' ''' % name
+                    has_constraint = True
+            if sex:
+                if has_constraint:
+                    SQL += '''
+                    AND "Sex" = '%s' ''' % sex
+                else:
+                    SQL += '''
+                    WHERE "Sex" = '%s' ''' % sex
+                    has_constraint = True
 
-            print(SQL)
+            if age:
+                if has_constraint:
+                    SQL += '''
+                    AND "Entrance Age" = '%s' ''' % age
+                else:
+                    SQL += '''
+                    WHERE "Entrance Age" = '%s' ''' % age
+                    has_constraint = True
+
+            if year:
+                if has_constraint:
+                    SQL += '''
+                    AND "Entrance Year" = '%s' ''' % year
+                else:
+                    SQL += '''
+                    WHERE "Entrance Year" = '%s' ''' % year
+                    has_constraint = True
+
+            if s_class:
+                if has_constraint:
+                    SQL += '''
+                    AND "Class" = '%s' ''' % s_class
+                else:
+                    SQL += '''
+                    WHERE "Class" = '%s' ''' % s_class
+
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
