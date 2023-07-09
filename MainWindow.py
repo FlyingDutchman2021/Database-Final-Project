@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 import StudentView
+import TeacherView
 
 
 class MainWindow:
@@ -20,7 +21,7 @@ class MainWindow:
         self.tree_frame = tk.Frame(self.window)
         self.scrollbar = tk.Scrollbar(self.tree_frame)
         self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
-                                 columns=['A', 'B', 'C', 'D', 'E', 'F'],
+                                 columns=(0, 1, 2, 3, 4, 5, 6, 7),
                                  show='headings',
                                  height=10)
         style = ttk.Style()
@@ -36,8 +37,12 @@ class MainWindow:
         self.tree.pack(side='left', padx=5, pady=15)
 
         # Create Student Info Manager Box
-        self.student = StudentView.StudentView(self.window, self.tree)
-        self.student.show(self.tree)
+
+        # self.student = StudentView.StudentView(self.window, self.tree)
+        # self.student.show(self.tree)
+
+        self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
+        self.teacher_view.show(self.tree)
 
         # Main loop
         self.window.mainloop()

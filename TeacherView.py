@@ -38,6 +38,8 @@ class TeacherView:
                                      font='Arial, 20', width=10)
 
     def show(self, tree):
+        # Configure column number
+        tree["columns"] = (0, 1, 2)
         # Set Tree heading Info
         heading_info = ['Teacher ID', 'Name', 'Course']
         for i in range(len(heading_info)):
@@ -46,7 +48,7 @@ class TeacherView:
         # Configure Tree Column Style
         width_config = [160, 140, 90]
         min_width_config = [115, 80, 80]
-        for i in range(6):
+        for i in range(len(width_config)):
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
         # Show Button
@@ -75,3 +77,96 @@ class TeacherView:
             for row in result:
                 tree.insert('', 'end', values=row)
             cursor.close()
+
+    def search(self, tree):
+        search_id = self.id.get()
+        name = self.name.get().title()
+        courses = self.course.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            has_constraint = False
+            temp_cursor = db.cursor()
+            SQL = '''SELECT * From Teacher '''
+            if search_id:
+                if not has_constraint:
+                    SQL += '''
+                    WHERE "Teacher ID" = '%s' ''' % search_id
+                    has_constraint = True
+                else:
+                    SQL += '''
+                    AND "Teacher ID" = '%s' ''' % search_id
+            if name:
+                if has_constraint:
+                    SQL += '''
+                    AND "Name" = '%s' ''' % name
+                else:
+                    SQL += '''
+                    WHERE "Name" = '%s' ''' % name
+                    has_constraint = True
+            if courses:
+                if has_constraint:
+                    SQL += '''
+                    AND "Course" = '%s' ''' % courses
+                else:
+                    SQL += '''
+                    WHERE "Course" = '%s' ''' % courses
+
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if len(tree.get_children()) > 0:
+                for item in tree.get_children():
+                    tree.delete(item)
+            for temp_row in temp_result:
+                tree.insert('', 'end', values=temp_row)
+
+    def insert(self, tree):
+        search_id = self.id.get()
+        name = self.name.get().title()
+        courses = self.course.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Teacher VALUES( '''
+            SQL += '''
+                '%s',''' % search_id
+            SQL += '''
+                '%s',''' % name
+            SQL += '''
+                '%s')''' % courses
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.search(tree)
+
+    def delete(self, tree):
+        generated_id = self.id.get()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Teacher WHERE "Teacher ID" = '%s' ''' % generated_id
+
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.id.set('')
+        self.search(tree)
+
+    def update(self, tree):
+        search_id = self.id.get()
+        name = self.name.get().title()
+        courses = self.course.get().title()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Teacher 
+            SET '''
+            if name:
+                SQL += '''
+                    "Name" = '%s',''' % name
+            if courses:
+                SQL += '''
+                    "Course" = '%s' ''' % courses
+            SQL += '''
+            WHERE "Teacher ID" = '%s' ''' % search_id
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.search(tree)

@@ -50,6 +50,8 @@ class StudentView:
                                     font='Arial, 20', width=10)
 
     def show(self, tree):
+        # Configure column number
+        tree["columns"] = (0, 1, 2, 3, 4, 5)
         # Set Tree heading Info
         heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class']
         for i in range(len(heading_info)):
