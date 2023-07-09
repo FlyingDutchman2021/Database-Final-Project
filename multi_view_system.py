@@ -331,10 +331,10 @@ class MultiViewSystem:
             if course_id:
                 if has_constraint:
                     SQL += '''
-                    AND "Coures ID" = '%s' ''' % course_id
+                    AND "Courses ID" = '%s' ''' % course_id
                 else:
                     SQL += '''
-                    WHERE "Coures ID" = '%s' ''' % course_id
+                    WHERE "Courses ID" = '%s' ''' % course_id
                     has_constraint = True
             if teacher_id:
                 if has_constraint:
@@ -359,9 +359,6 @@ class MultiViewSystem:
                     self.tree.delete(item)
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
-
-
-
 
     def insert_student(self):
         generated_id = self.student_id.get()
@@ -476,18 +473,14 @@ class MultiViewSystem:
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
 
-
-
-
-
     def delete_student(self):
         generated_id = self.student_id.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''DELETE From Student WHERE "Student ID" = '%s' ''' % generated_id
-            #SQL += '''
-            #DELETE From Course_choosing WHERE "Student ID" = '%s' ''' % generated_id
+            # SQL += '''
+            # DELETE From Course_choosing WHERE "Student ID" = '%s' ''' % generated_id
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
@@ -548,10 +541,6 @@ class MultiViewSystem:
                     self.tree.delete(item)
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
-
-
-
-
 
     def update_student(self):
         generated_id = self.student_id.get()
