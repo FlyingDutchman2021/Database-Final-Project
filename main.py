@@ -1,3 +1,3 @@
-import multi_view_system
+import MainWindow
 
-my_system = multi_view_system.MainWindow()
+my_system = MainWindow.MainWindow()

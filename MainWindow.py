@@ -34,15 +34,9 @@ class MainWindow:
         self.scrollbar.pack(side='right', fill='y', pady=15)
         self.tree.pack(side='left', padx=5, pady=15)
 
-
-
         # Create Student Info Manager Box
         self.student = StudentView(self.window, self.tree)
         self.student.show(self.tree)
-
-
-
-
 
         # Main loop
         self.window.mainloop()
@@ -52,14 +46,15 @@ class StudentView:
     def __init__(self, window, tree):
 
         # Create Button
-        self.button_search = tk.Button(master=window, text='Search', padx=50, pady=15, font='Arial, 28',
+        self.button_frame = tk.Frame(window)
+        self.button_search = tk.Button(self.button_frame, text='Search', padx=50, pady=15, font='Arial, 28',
                                        command=lambda: self.search(tree=tree))
-        self.button_update = tk.Button(window, text='Upgrade', padx=50, pady=15, font='Arial, 28',
-                                       )
-        self.button_add = tk.Button(window, text='+', padx=50, pady=15, font='Arial, 28',
-                                    )
-        self.button_delete = tk.Button(window, text='-', padx=50, pady=15, font='Arial, 28',
-                                       )
+        self.button_update = tk.Button(self.button_frame, text='Update', padx=50, pady=15, font='Arial, 28',
+                                       command=lambda: self.update(tree=tree))
+        self.button_add = tk.Button(self.button_frame, text='+', padx=50, pady=15, font='Arial, 28',
+                                    command=lambda: self.insert(tree))
+        self.button_delete = tk.Button(self.button_frame, text='-', padx=50, pady=15, font='Arial, 28',
+                                       command=lambda: self.delete(tree))
         # Create Entry Frame
         self.entry_frame = tk.Frame(window)
         self.entry_frame.columnconfigure("all", weight=1)
@@ -107,10 +102,11 @@ class StudentView:
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
         # Show Button
-        self.button_search.pack()
-        self.button_update.pack()
-        self.button_add.pack()
-        self.button_delete.pack()
+        self.button_search.pack(side='left', padx=10)
+        self.button_update.pack(side='left', padx=10)
+        self.button_add.pack(side='left', padx=10)
+        self.button_delete.pack(side='left', padx=10)
+        self.button_frame.pack()
 
         # Show Entry
         self.entry_frame.pack()
@@ -152,11 +148,11 @@ class StudentView:
             if generated_id:
                 if not has_constraint:
                     SQL += '''
-                    WHERE "Student ID" = '%s' ''' % id
+                    WHERE "Student ID" = '%s' ''' % generated_id
                     has_constraint = True
                 else:
                     SQL += '''
-                    AND "Student ID" = '%s' ''' % id
+                    AND "Student ID" = '%s' ''' % generated_id
             if name:
                 if has_constraint:
                     SQL += '''
@@ -200,6 +196,7 @@ class StudentView:
                     SQL += '''
                     WHERE "Class" = '%s' ''' % s_class
 
+            print(SQL)
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
@@ -209,3 +206,73 @@ class StudentView:
             for temp_row in temp_result:
                 tree.insert('', 'end', values=temp_row)
 
+    def insert(self, tree):
+        generated_id = self.student_id.get()
+        name = self.student_name.get().title()
+        sex = self.student_sex.get().title()
+        age = self.student_age.get()
+        year = self.student_year.get()
+        s_class = self.student_class.get().upper()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''INSERT INTO Student 
+            VALUES( '''
+            SQL += '''
+                '%s',''' % generated_id
+            SQL += '''
+                '%s',''' % name
+            SQL += '''
+                '%s',''' % sex
+            SQL += '''
+                '%s',''' % age
+            SQL += '''
+                '%s',''' % year
+            SQL += '''
+                '%s')''' % s_class
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.search(tree)
+
+    def delete(self, tree):
+        generated_id = self.student_id.get()
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Student WHERE "Student ID" = '%s' ''' % generated_id
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.student_id.set('')
+        self.search(tree)
+
+    def update(self, tree):
+        generated_id = self.student_id.get()
+        name = self.student_name.get().title()
+        sex = self.student_sex.get().title()
+        age = self.student_age.get()
+        year = self.student_year.get()
+        s_class = self.student_class.get().upper()
+
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''UPDATE Student 
+            SET '''
+            if name:
+                SQL += '''
+                    "Name" = '%s',''' % name
+            if sex:
+                SQL += '''
+                    "Sex" = '%s',''' % sex
+            if age:
+                SQL += '''
+                    "Entrance Age" = '%s',''' % age
+            if year:
+                SQL += '''
+                    "Entrance Year" = '%s',''' % year
+            if s_class:
+                SQL += '''
+                    "Class" = '%s' ''' % s_class
+            SQL += '''
+            WHERE "Student ID" = '%s' ''' % generated_id
+            temp_cursor.execute(SQL)
+            temp_cursor.close()
+        self.search(tree)
