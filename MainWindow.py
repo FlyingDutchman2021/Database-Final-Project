@@ -3,6 +3,7 @@ from tkinter import ttk
 
 import StudentView
 import TeacherView
+import CourseView
 
 
 class MainWindow:
@@ -21,7 +22,7 @@ class MainWindow:
         self.tree_frame = tk.Frame(self.window)
         self.scrollbar = tk.Scrollbar(self.tree_frame)
         self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
-                                 columns=(0, 1, 2, 3, 4, 5, 6, 7),
+                                 columns=('0', '1', '2', '3', '4', '5', '6', '7'),
                                  show='headings',
                                  height=10)
         style = ttk.Style()
@@ -43,6 +44,9 @@ class MainWindow:
 
         # self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
         # self.teacher_view.show(self.tree)
+
+        self.course_view = CourseView.CourseView(self.window, self.tree)
+        self.course_view.show(self.tree)
 
         # Main loop
         self.window.mainloop()

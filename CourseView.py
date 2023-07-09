@@ -198,10 +198,13 @@ class CourseView:
                     "Credit" = '%s',''' % credit
             if grade:
                 SQL += '''
-                    "Grade" = '%s',''' % grade
+                    "Grade" = '%s' ''' % grade
             if cancel_year:
-                SQL += '''
+                SQL += ''',
                     "Canceled Year" = '%s' ''' % cancel_year
+            else:
+                SQL += ''',
+                                    "Canceled Year" = null '''
 
             SQL += '''
             WHERE "Course ID" = '%s' ''' % search_id
@@ -230,8 +233,12 @@ class CourseView:
                 '%s',''' % credit
             SQL += '''
                 '%s',''' % grade
-            SQL += '''
-                '%s')''' % cancel_year
+            if cancel_year:
+                SQL += '''
+                    '%s')''' % cancel_year
+            else:
+                SQL += '''
+                        NULL)'''
             temp_cursor.execute(SQL)
             temp_cursor.close()
         self.search(tree)
