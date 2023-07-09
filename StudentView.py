@@ -30,24 +30,24 @@ class StudentView:
         self.label_class = tk.Label(self.entry_frame, text='Class')
 
         # Create Entry
-        self.student_id = tk.StringVar()
-        self.entry_Student_ID = tk.Entry(self.entry_frame, textvariable=self.student_id,
-                                         font='Arial, 20', width=14)
-        self.student_name = tk.StringVar()
-        self.entry_Student_Name = tk.Entry(self.entry_frame, textvariable=self.student_name,
-                                           font='Arial, 20', width=10)
-        self.student_sex = tk.StringVar()
-        self.entry_Student_Sex = tk.Entry(self.entry_frame, textvariable=self.student_sex,
-                                          font='Arial, 20', width=10)
-        self.student_age = tk.StringVar()
-        self.entry_Student_Age = tk.Entry(self.entry_frame, textvariable=self.student_age,
-                                          font='Arial, 20', width=12)
-        self.student_year = tk.StringVar()
-        self.entry_Student_Year = tk.Entry(self.entry_frame, textvariable=self.student_year,
-                                           font='Arial, 20', width=12)
-        self.student_class = tk.StringVar()
-        self.entry_Student_Class = tk.Entry(self.entry_frame, textvariable=self.student_class,
-                                            font='Arial, 20', width=10)
+        self.id = tk.StringVar()
+        self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
+                                 font='Arial, 20', width=14)
+        self.name = tk.StringVar()
+        self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
+                                   font='Arial, 20', width=10)
+        self.sex = tk.StringVar()
+        self.entry_Sex = tk.Entry(self.entry_frame, textvariable=self.sex,
+                                  font='Arial, 20', width=10)
+        self.age = tk.StringVar()
+        self.entry_Age = tk.Entry(self.entry_frame, textvariable=self.age,
+                                  font='Arial, 20', width=12)
+        self.year = tk.StringVar()
+        self.entry_Year = tk.Entry(self.entry_frame, textvariable=self.year,
+                                   font='Arial, 20', width=12)
+        self.s_class = tk.StringVar()
+        self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
+                                    font='Arial, 20', width=10)
 
     def show(self, tree):
         # Set Tree heading Info
@@ -76,12 +76,12 @@ class StudentView:
         self.label_age.grid(row=0, column=3)
         self.label_year.grid(row=0, column=4)
         self.label_class.grid(row=0, column=5)
-        self.entry_Student_ID.grid(row=1, column=0)
-        self.entry_Student_Name.grid(row=1, column=1)
-        self.entry_Student_Sex.grid(row=1, column=2)
-        self.entry_Student_Age.grid(row=1, column=3)
-        self.entry_Student_Year.grid(row=1, column=4)
-        self.entry_Student_Class.grid(row=1, column=5)
+        self.entry_ID.grid(row=1, column=0)
+        self.entry_Name.grid(row=1, column=1)
+        self.entry_Sex.grid(row=1, column=2)
+        self.entry_Age.grid(row=1, column=3)
+        self.entry_Year.grid(row=1, column=4)
+        self.entry_Class.grid(row=1, column=5)
 
         # Initial sheet data
         with sqlite3.connect(database='Student Info.db') as db:
@@ -94,12 +94,12 @@ class StudentView:
             cursor.close()
 
     def search(self, tree):
-        generated_id = self.student_id.get()
-        name = self.student_name.get().title()
-        sex = self.student_sex.get().title()
-        age = self.student_age.get()
-        year = self.student_year.get()
-        s_class = self.student_class.get().upper()
+        generated_id = self.id.get()
+        name = self.name.get().title()
+        sex = self.sex.get().title()
+        age = self.age.get()
+        year = self.year.get()
+        s_class = self.s_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             has_constraint = False
@@ -167,12 +167,12 @@ class StudentView:
                 tree.insert('', 'end', values=temp_row)
 
     def insert(self, tree):
-        generated_id = self.student_id.get()
-        name = self.student_name.get().title()
-        sex = self.student_sex.get().title()
-        age = self.student_age.get()
-        year = self.student_year.get()
-        s_class = self.student_class.get().upper()
+        generated_id = self.id.get()
+        name = self.name.get().title()
+        sex = self.sex.get().title()
+        age = self.age.get()
+        year = self.year.get()
+        s_class = self.s_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
@@ -195,22 +195,22 @@ class StudentView:
         self.search(tree)
 
     def delete(self, tree):
-        generated_id = self.student_id.get()
+        generated_id = self.id.get()
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''DELETE From Student WHERE "Student ID" = '%s' ''' % generated_id
             temp_cursor.execute(SQL)
             temp_cursor.close()
-        self.student_id.set('')
+        self.id.set('')
         self.search(tree)
 
     def update(self, tree):
-        generated_id = self.student_id.get()
-        name = self.student_name.get().title()
-        sex = self.student_sex.get().title()
-        age = self.student_age.get()
-        year = self.student_year.get()
-        s_class = self.student_class.get().upper()
+        generated_id = self.id.get()
+        name = self.name.get().title()
+        sex = self.sex.get().title()
+        age = self.age.get()
+        year = self.year.get()
+        s_class = self.s_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
