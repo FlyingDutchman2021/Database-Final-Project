@@ -78,6 +78,12 @@ class TeacherView:
                 tree.insert('', 'end', values=row)
             cursor.close()
 
+    def destroy(self):
+        for widget in self.button_frame.winfo_children():
+            widget.destroy()
+        for widget in self.entry_frame.winfo_children():
+            widget.destroy()
+
     def search(self, tree):
         search_id = self.id.get()
         name = self.name.get().title()
