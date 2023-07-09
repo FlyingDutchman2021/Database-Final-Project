@@ -4,6 +4,7 @@ import sqlite3
 
 class StudentView:
     def __init__(self, window, tree):
+        # Create Display Frame
 
         # Create Button
         self.button_frame = tk.Frame(window)
@@ -61,7 +62,7 @@ class StudentView:
         width_config = [160, 140, 90, 140, 140, 120]
         min_width_config = [115, 80, 80, 120, 120, 80]
         for i in range(len(width_config)):
-            tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
+            tree.column('%d' %i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
         # Show Button
         self.button_search.pack(side='left', padx=10)
@@ -91,15 +92,18 @@ class StudentView:
             SQL = '''SELECT * From Student'''
             cursor.execute(SQL)
             result = cursor.fetchall()
+            if len(tree.get_children()) > 0:
+                for item in tree.get_children():
+                    tree.delete(item)
             for row in result:
                 tree.insert('', 'end', values=row)
             cursor.close()
 
-    def destroy(self):
-        for widget in self.button_frame.winfo_children():
-            widget.destroy()
-        for widget in self.entry_frame.winfo_children():
-            widget.destroy()
+    def hide(self):
+        self.entry_frame.pack_forget()
+        self.button_frame.pack_forget()
+
+
 
     def search(self, tree):
         generated_id = self.id.get()

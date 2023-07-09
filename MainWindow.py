@@ -1,4 +1,3 @@
-import sqlite3
 import tkinter as tk
 from tkinter import ttk
 
@@ -10,6 +9,10 @@ import ChooseView
 
 class MainWindow:
     def __init__(self):
+        # Tracking attributes
+        self.identity = 'S'
+
+
         # Create main window
         self.window = tk.Tk()
         full_width = self.window.winfo_screenwidth()
@@ -18,6 +21,27 @@ class MainWindow:
             '%dx%d+%d+%d' % (full_width * 0.73, full_width * 0.45, full_width * (1 - 0.73) / 2, full_height *
                              ((1 - 0.45) / 2 - 0.12)))
         self.window.title('Student & Course Information Management System Insider Version')
+
+        # Create Navigation Bar
+        self.navigation_bar = tk.Frame(self.window)
+        self.navigation_bar.pack()
+
+        self.button_back = tk.Button(self.navigation_bar, text='Back')
+        self.button_switch_student = tk.Button(self.navigation_bar, text='Student',
+                                               command=lambda: self.switch_student())
+        self.button_switch_teacher = tk.Button(self.navigation_bar, text='Teacher',
+                                               command=lambda: self.switch_teacher())
+        self.button_switch_course = tk.Button(self.navigation_bar, text='Course',
+                                              command=lambda: self.switch_course())
+        self.button_switch_choose = tk.Button(self.navigation_bar, text='Choose',
+                                              command=lambda: self.switch_choose())
+
+        self.button_back.pack(side='left')
+        self.button_switch_student.pack(side='left')
+        self.button_switch_teacher.pack(side='left')
+        self.button_switch_course.pack(side='left')
+        self.button_switch_choose.pack(side='left')
+
 
         # Create Table
 
@@ -41,18 +65,41 @@ class MainWindow:
 
         # Create Student Info Manager Box
 
-        # self.student = StudentView.StudentView(self.window, self.tree)
-        # self.student.show(self.tree)
 
-        # self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
-        # self.teacher_view.show(self.tree)
+        self.student_view = StudentView.StudentView(self.window, self.tree)
 
-        # self.course_view = CourseView.CourseView(self.window, self.tree)
-        # self.course_view.show(self.tree)
+        self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
+
+        self.course_view = CourseView.CourseView(self.window, self.tree)
 
         self.choose_view = ChooseView.ChooseView(self.window, self.tree)
-        self.choose_view.show(self.tree)
+
+        self.current_window = self.student_view
+        self.current_window.show(self.tree)
+
+
+
 
 
         # Main loop
         self.window.mainloop()
+
+    def switch_student(self):
+        self.current_window.hide()
+        self.current_window = self.student_view
+        self.current_window.show(self.tree)
+
+    def switch_teacher(self):
+        self.current_window.hide()
+        self.current_window = self.teacher_view
+        self.current_window.show(self.tree)
+
+    def switch_course(self):
+        self.current_window.hide()
+        self.current_window = CourseView.CourseView(self.window, self.tree)
+        self.current_window.show(self.tree)
+
+    def switch_choose(self):
+        self.current_window.hide()
+        self.current_window = ChooseView.ChooseView(self.window, self.tree)
+        self.current_window.show(self.tree)

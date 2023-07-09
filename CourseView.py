@@ -91,15 +91,16 @@ class CourseView:
             SQL = '''SELECT * From Course'''
             cursor.execute(SQL)
             result = cursor.fetchall()
+            if len(tree.get_children()) > 0:
+                for item in tree.get_children():
+                    tree.delete(item)
             for row in result:
                 tree.insert('', 'end', values=row)
             cursor.close()
 
-    def destroy(self):
-        for widget in self.button_frame.winfo_children():
-            widget.destroy()
-        for widget in self.entry_frame.winfo_children():
-            widget.destroy()
+    def hide(self):
+        self.entry_frame.pack_forget()
+        self.button_frame.pack_forget()
 
     def search(self, tree):
         search_id = self.id.get()
