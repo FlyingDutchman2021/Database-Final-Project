@@ -41,8 +41,8 @@ class MainWindow:
         # self.student = StudentView.StudentView(self.window, self.tree)
         # self.student.show(self.tree)
 
-        self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
-        self.teacher_view.show(self.tree)
+        # self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
+        # self.teacher_view.show(self.tree)
 
         # Main loop
         self.window.mainloop()
