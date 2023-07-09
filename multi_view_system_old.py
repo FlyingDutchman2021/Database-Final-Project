@@ -130,6 +130,7 @@ class MultiViewSystem:
 
         self.window.mainloop()
 
+
     def search_student(self):
         generated_id = self.student_id.get()
         name = self.student_name.get().title()
@@ -360,6 +361,7 @@ class MultiViewSystem:
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
 
+
     def insert_student(self):
         generated_id = self.student_id.get()
         name = self.student_name.get().title()
@@ -473,6 +475,7 @@ class MultiViewSystem:
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
 
+
     def delete_student(self):
         generated_id = self.student_id.get()
 
@@ -541,6 +544,7 @@ class MultiViewSystem:
                     self.tree.delete(item)
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
+
 
     def update_student(self):
         generated_id = self.student_id.get()
@@ -675,6 +679,7 @@ class MultiViewSystem:
                     self.tree.delete(item)
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
+
 
     def update_Score(self):
         student_id = self.student_id.get()

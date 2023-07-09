@@ -1,9 +1,11 @@
+import sqlite3
 import tkinter as tk
 from tkinter import ttk
 
 import StudentView
 import TeacherView
 import CourseView
+import ChooseView
 
 
 class MainWindow:
@@ -45,8 +47,12 @@ class MainWindow:
         # self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
         # self.teacher_view.show(self.tree)
 
-        self.course_view = CourseView.CourseView(self.window, self.tree)
-        self.course_view.show(self.tree)
+        # self.course_view = CourseView.CourseView(self.window, self.tree)
+        # self.course_view.show(self.tree)
+
+        self.choose_view = ChooseView.ChooseView(self.window, self.tree)
+        self.choose_view.show(self.tree)
+
 
         # Main loop
         self.window.mainloop()

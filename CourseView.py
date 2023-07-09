@@ -185,6 +185,9 @@ class CourseView:
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
+            SQL = '''PRAGMA foreign_keys = ON;'''
+            temp_cursor.execute(SQL)
+
             SQL = '''UPDATE Course 
             SET '''
             if name:
@@ -222,6 +225,9 @@ class CourseView:
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
+            SQL = '''PRAGMA foreign_keys = ON;'''
+            temp_cursor.execute(SQL)
+
             SQL = '''INSERT INTO Course VALUES( '''
             SQL += '''
                 '%s',''' % search_id

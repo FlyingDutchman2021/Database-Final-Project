@@ -45,7 +45,6 @@ class ChooseView:
         self.entry_Score = tk.Entry(self.entry_frame, textvariable=self.score,
                                     font='Arial, 20', width=12)
 
-
     def show(self, tree):
         # Configure column number
         tree["columns"] = (0, 1, 2, 3, 4)
@@ -55,8 +54,8 @@ class ChooseView:
             tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140, 120]
-        min_width_config = [115, 80, 80, 120, 120, 80]
+        width_config = [160, 140, 90, 140, 140]
+        min_width_config = [115, 80, 80, 120, 120]
         for i in range(len(width_config)):
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
@@ -83,7 +82,7 @@ class ChooseView:
         # Initial sheet data
         with sqlite3.connect(database='Student Info.db') as db:
             cursor = db.cursor()
-            SQL = '''SELECT * From Student'''
+            SQL = '''SELECT * From Choose'''
             cursor.execute(SQL)
             result = cursor.fetchall()
             for row in result:
@@ -100,7 +99,7 @@ class ChooseView:
         with sqlite3.connect(database='Student Info.db') as db:
             has_constraint = False
             temp_cursor = db.cursor()
-            SQL = '''SELECT * From Course_choosing '''
+            SQL = '''SELECT * From Choose'''
             if student_id:
                 if not has_constraint:
                     SQL += '''
@@ -112,10 +111,10 @@ class ChooseView:
             if course_id:
                 if has_constraint:
                     SQL += '''
-                    AND "Courses ID" = '%s' ''' % course_id
+                    AND "Course ID" = '%s' ''' % course_id
                 else:
                     SQL += '''
-                    WHERE "Courses ID" = '%s' ''' % course_id
+                    WHERE "Course ID" = '%s' ''' % course_id
                     has_constraint = True
             if teacher_id:
                 if has_constraint:
@@ -145,10 +144,14 @@ class ChooseView:
         student_id = self.student_id.get()
         course_id = self.course_id.get()
         teacher_id = self.teacher_id.get()
+        chosen_year = self.chosen_year.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''INSERT INTO Courses_choosing VALUES( '''
+            SQL = '''PRAGMA foreign_keys = ON;'''
+            temp_cursor.execute(SQL)
+
+            SQL = '''INSERT INTO Choose VALUES( '''
             SQL += '''
                 '%s',''' % student_id
             SQL += '''
@@ -156,21 +159,26 @@ class ChooseView:
             SQL += '''
                 '%s',''' % teacher_id
             SQL += '''
+                '%s',''' % chosen_year
+            SQL += '''
                 null)'''
             temp_cursor.execute(SQL)
             temp_cursor.close()
         self.search(tree)
 
     def delete(self, tree):
-        generated_id = self.student_id.get()
+        student_id = self.student_id.get()
+        course_id = self.course_id.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''DELETE From Course_choosing WHERE "Student ID" = '%s' ''' % generated_id
+            SQL = '''DELETE From Choose WHERE "Student ID" = '%s'
+             AND "Course ID" = '%s' ''' % (student_id, course_id)
 
             temp_cursor.execute(SQL)
             temp_cursor.close()
         self.student_id.set('')
+        self.course_id.set('')
         self.search(tree)
 
     def update(self, tree):
@@ -181,7 +189,10 @@ class ChooseView:
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''UPDATE Course_choosing 
+            SQL = '''PRAGMA foreign_keys = ON;'''
+            temp_cursor.execute(SQL)
+
+            SQL = '''UPDATE Choose 
             SET '''
             if student_id:
                 SQL += '''
@@ -197,7 +208,8 @@ class ChooseView:
                 Score = '%s' ''' % score
 
             SQL += '''
-            WHERE "Course ID" = '%s' ''' % id
+            WHERE "Student ID" = '%s' 
+            AND "Course ID" = '%s' ''' % (student_id, course_id)
             temp_cursor.execute(SQL)
             temp_cursor.close()
         self.search(tree)
