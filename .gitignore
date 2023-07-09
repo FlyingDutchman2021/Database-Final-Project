@@ -7,3 +7,4 @@
 .idea/vcs.xml
 __pycache__/multi_view_system.cpython-311.pyc
 *.pages
+.DS_Store
