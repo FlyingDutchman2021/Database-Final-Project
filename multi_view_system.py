@@ -52,8 +52,14 @@ class StudentView:
     def __init__(self, window, tree):
 
         # Create Button
-        # self.button_search = tk.Button(master=window, text='Search', padx=50, pady=15, font='Arial, 28',
-        #                                command=lambda: self.search(tree=tree))
+        self.button_search = tk.Button(master=window, text='Search', padx=50, pady=15, font='Arial, 28',
+                                       command=lambda: self.search(tree=tree))
+        self.button_update = tk.Button(window, text='Upgrade', padx=50, pady=15, font='Arial, 28',
+                                       )
+        self.button_add = tk.Button(window, text='+', padx=50, pady=15, font='Arial, 28',
+                                    )
+        self.button_delete = tk.Button(window, text='-', padx=50, pady=15, font='Arial, 28',
+                                       )
         # Create Entry Frame
         self.entry_frame = tk.Frame(window)
         self.entry_frame.columnconfigure("all", weight=1)
@@ -88,7 +94,6 @@ class StudentView:
         self.entry_Student_Class = tk.Entry(self.entry_frame, textvariable=self.student_class,
                                             font='Arial, 20', width=10)
 
-
     def show(self, tree):
         # Set Tree heading Info
         heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class']
@@ -102,7 +107,10 @@ class StudentView:
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
         # Show Button
-        # self.button_search.pack()
+        self.button_search.pack()
+        self.button_update.pack()
+        self.button_add.pack()
+        self.button_delete.pack()
 
         # Show Entry
         self.entry_frame.pack()
@@ -200,3 +208,4 @@ class StudentView:
                     tree.delete(item)
             for temp_row in temp_result:
                 tree.insert('', 'end', values=temp_row)
+
