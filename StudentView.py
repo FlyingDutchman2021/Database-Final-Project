@@ -50,7 +50,7 @@ class StudentView:
         self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
                                     font='Arial, 20', width=10)
 
-    def show(self, tree):
+    def show(self, tree, status):
         # Configure column number
         tree["columns"] = (0, 1, 2, 3, 4, 5)
         # Set Tree heading Info

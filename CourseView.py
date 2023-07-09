@@ -49,7 +49,7 @@ class CourseView:
         self.entry_Canceled_Year = tk.Entry(self.entry_frame, textvariable=self.canceled_year,
                                             font='Arial, 20', width=10)
 
-    def show(self, tree):
+    def show(self, tree, status):
         # Configure column number
         tree["columns"] = (0, 1, 2, 3, 4, 5)
         # Set Tree heading Info

@@ -45,7 +45,7 @@ class ChooseView:
         self.entry_Score = tk.Entry(self.entry_frame, textvariable=self.score,
                                     font='Arial, 20', width=12)
 
-    def show(self, tree):
+    def show(self, tree, status):
         # Configure column number
         tree["columns"] = (0, 1, 2, 3, 4)
         # Set Tree heading Info

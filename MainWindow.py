@@ -5,12 +5,14 @@ import StudentView
 import TeacherView
 import CourseView
 import ChooseView
+import LoginView
 
 
 class MainWindow:
     def __init__(self):
         # Tracking attributes
-        self.identity = 'S'
+        self.current_window = None
+        self.identity = ['S']
 
 
         # Create main window
@@ -24,9 +26,8 @@ class MainWindow:
 
         # Create Navigation Bar
         self.navigation_bar = tk.Frame(self.window)
-        self.navigation_bar.pack()
 
-        self.button_back = tk.Button(self.navigation_bar, text='Back')
+        self.button_back = tk.Button(self.navigation_bar, text='Back', command=lambda: self.hide_main_window())
         self.button_switch_student = tk.Button(self.navigation_bar, text='Student',
                                                command=lambda: self.switch_student())
         self.button_switch_teacher = tk.Button(self.navigation_bar, text='Teacher',
@@ -41,7 +42,6 @@ class MainWindow:
         self.button_switch_teacher.pack(side='left')
         self.button_switch_course.pack(side='left')
         self.button_switch_choose.pack(side='left')
-
 
         # Create Table
 
@@ -59,12 +59,10 @@ class MainWindow:
         self.scrollbar.configure(command=self.tree.yview)
 
         # Show Table
-        self.tree_frame.pack()
         self.scrollbar.pack(side='right', fill='y', pady=15)
         self.tree.pack(side='left', padx=5, pady=15)
 
         # Create Student Info Manager Box
-
 
         self.student_view = StudentView.StudentView(self.window, self.tree)
 
@@ -74,32 +72,45 @@ class MainWindow:
 
         self.choose_view = ChooseView.ChooseView(self.window, self.tree)
 
-        self.current_window = self.student_view
-        self.current_window.show(self.tree)
+        # Create Login Window
+        self.login_view = LoginView.LoginView(self.window, self.identity, self.show_main_window)
 
-
-
-
+        self.login_view.show()
 
         # Main loop
         self.window.mainloop()
 
+    def show_main_window(self):
+        self.login_view.hide()
+        self.navigation_bar.pack()
+        self.tree_frame.pack()
+
+        self.current_window = self.student_view
+        self.current_window.show(self.tree, status=self.identity)
+
+    def hide_main_window(self):
+        self.current_window.hide()
+        self.tree_frame.pack_forget()
+        self.navigation_bar.pack_forget()
+
+        self.login_view.show()
+
     def switch_student(self):
         self.current_window.hide()
         self.current_window = self.student_view
-        self.current_window.show(self.tree)
+        self.current_window.show(self.tree, status=self.identity)
 
     def switch_teacher(self):
         self.current_window.hide()
         self.current_window = self.teacher_view
-        self.current_window.show(self.tree)
+        self.current_window.show(self.tree, status=self.identity)
 
     def switch_course(self):
         self.current_window.hide()
         self.current_window = CourseView.CourseView(self.window, self.tree)
-        self.current_window.show(self.tree)
+        self.current_window.show(self.tree, status=self.identity)
 
     def switch_choose(self):
         self.current_window.hide()
         self.current_window = ChooseView.ChooseView(self.window, self.tree)
-        self.current_window.show(self.tree)
+        self.current_window.show(self.tree, status=self.identity)
