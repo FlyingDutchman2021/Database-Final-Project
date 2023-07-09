@@ -60,7 +60,7 @@ class StudentView:
         # Configure Tree Column Style
         width_config = [160, 140, 90, 140, 140, 120]
         min_width_config = [115, 80, 80, 120, 120, 80]
-        for i in range(6):
+        for i in range(len(width_config)):
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
         # Show Button
