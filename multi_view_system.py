@@ -3,7 +3,7 @@ import sqlite3
 from tkinter import ttk
 
 
-class MultiViewSystem:
+class MainWindow:
     def __init__(self):
         # Create main window
         self.window = tk.Tk()
@@ -16,41 +16,46 @@ class MultiViewSystem:
 
         # Create Table
 
-        # Create Tree Frame
         self.tree_frame = tk.Frame(self.window)
-        # Create Scrollbar
         self.scrollbar = tk.Scrollbar(self.tree_frame)
-        # Create Tree
         self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
                                  columns=['A', 'B', 'C', 'D', 'E', 'F'],
                                  show='headings',
                                  height=10)
-
-        # Set Tree heading Info
-        heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class']
-        for i in range(len(heading_info)):
-            self.tree.heading(i, text=heading_info[i])
-
-        # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140, 120]
-        min_width_config = [115, 80, 80, 120, 120, 80]
-        for i in range(6):
-            self.tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
-
-        # Table Font setting
         style = ttk.Style()
         style.configure('Treeview.Heading', font=('Arial', 18))
         style.configure('Treeview', font=('Arial', 18))
         style.configure('Treeview', rowheight=28)
 
-        # Link Scrollbar with Tree
         self.scrollbar.configure(command=self.tree.yview)
 
-        # Create Button
-        self.button01 = tk.Button(master=self.window, text='Search', padx=50, pady=15, font='Arial, 28')
+        # Show Table
+        self.tree_frame.pack()
+        self.scrollbar.pack(side='right', fill='y', pady=15)
+        self.tree.pack(side='left', padx=5, pady=15)
 
+
+
+        # Create Student Info Manager Box
+        self.student = StudentView(self.window, self.tree)
+        self.student.show(self.tree)
+
+
+
+
+
+        # Main loop
+        self.window.mainloop()
+
+
+class StudentView:
+    def __init__(self, window, tree):
+
+        # Create Button
+        # self.button_search = tk.Button(master=window, text='Search', padx=50, pady=15, font='Arial, 28',
+        #                                command=lambda: self.search(tree=tree))
         # Create Entry Frame
-        self.entry_frame = tk.Frame(self.window)
+        self.entry_frame = tk.Frame(window)
         self.entry_frame.columnconfigure("all", weight=1)
         self.entry_frame.rowconfigure(0, weight=1, pad=0)
         self.entry_frame.rowconfigure(1, weight=1, pad=0)
@@ -83,17 +88,21 @@ class MultiViewSystem:
         self.entry_Student_Class = tk.Entry(self.entry_frame, textvariable=self.student_class,
                                             font='Arial, 20', width=10)
 
-        # Link Button and Entry Value and functions
-        self.button01.configure(command=lambda: self.search())
 
-        # Pack
+    def show(self, tree):
+        # Set Tree heading Info
+        heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class']
+        for i in range(len(heading_info)):
+            tree.heading(i, text=heading_info[i])
 
-        # Show Table
-        self.tree_frame.pack()
-        self.scrollbar.pack(side='right', fill='y', pady=15)
-        self.tree.pack(side='left', padx=5, pady=15)
+        # Configure Tree Column Style
+        width_config = [160, 140, 90, 140, 140, 120]
+        min_width_config = [115, 80, 80, 120, 120, 80]
+        for i in range(6):
+            tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
+
         # Show Button
-        self.button01.pack()
+        # self.button_search.pack()
 
         # Show Entry
         self.entry_frame.pack()
@@ -117,13 +126,10 @@ class MultiViewSystem:
             cursor.execute(SQL)
             result = cursor.fetchall()
             for row in result:
-                self.tree.insert('', 'end', values=row)
+                tree.insert('', 'end', values=row)
             cursor.close()
 
-        self.window.mainloop()
-
-
-    def search(self):
+    def search(self, tree):
         generated_id = self.student_id.get()
         name = self.student_name.get().title()
         sex = self.student_sex.get().title()
@@ -189,8 +195,8 @@ class MultiViewSystem:
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
-            if len(self.tree.get_children()) > 0:
-                for item in self.tree.get_children():
-                    self.tree.delete(item)
+            if len(tree.get_children()) > 0:
+                for item in tree.get_children():
+                    tree.delete(item)
             for temp_row in temp_result:
-                self.tree.insert('', 'end', values=temp_row)
+                tree.insert('', 'end', values=temp_row)
