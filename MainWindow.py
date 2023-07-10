@@ -9,6 +9,7 @@ import LoginView
 import StudentCourseView
 import StudentScoreView
 import ChooseDetailView
+import AVGView
 
 
 class MainWindow:
@@ -44,6 +45,9 @@ class MainWindow:
                                                       command=lambda: self.switch_student_detail())
         self.button_switch_student_score = tk.Button(self.navigation_bar, text='Student-Score',
                                                      command=lambda: self.switch_student_score())
+        self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',
+                                           command=lambda: self.switch_AVG())
+
 
         self.button_back.pack(side='left')
         self.button_switch_student.pack(side='left')
@@ -53,6 +57,11 @@ class MainWindow:
         self.button_switch_choose_detail.pack(side='left')
         self.button_switch_student_course.pack(side='left')
         self.button_switch_student_score.pack(side='left')
+        self.button_switch_AVG.pack(side='left')
+
+
+
+
 
         # Create Table
 
@@ -73,6 +82,10 @@ class MainWindow:
         self.scrollbar.pack(side='right', fill='y', pady=15)
         self.tree.pack(side='left', padx=5, pady=15)
 
+
+
+
+
         # Create Student Info Manager Box
 
         self.student_view = StudentView.StudentView(self.window, self.tree)
@@ -89,11 +102,14 @@ class MainWindow:
 
         self.student_score_view = StudentScoreView.StudentScoreView(self.window, self.tree)
 
+        self.AVG_view = AVGView.AVGView(self.window, self.tree)
+
+
+
+
         # Create Login Window
         self.login_view = LoginView.LoginView(self.window, self.identity, self.show_main_window)
-
         self.login_view.show()
-
         # Main loop
         self.window.mainloop()
 
@@ -145,4 +161,9 @@ class MainWindow:
     def switch_student_score(self):
         self.current_window.hide()
         self.current_window = self.student_score_view
+        self.current_window.show(self.tree)
+
+    def switch_AVG(self):
+        self.current_window.hide()
+        self.current_window = self.AVG_view
         self.current_window.show(self.tree)
