@@ -7,7 +7,6 @@ import config
 class StudentView:
     def __init__(self, window):
         # Tracking Data
-
         self.add_expanded = False
         # 1
         self.id = tk.StringVar()
@@ -76,29 +75,29 @@ class StudentView:
         # self.entry_frame.rowconfigure(1, weight=1, pad=0)
 
         # 1
-        self.label_id = tk.Label(self.entry_frame, text='Student ID', font=config.S_LABEL_FONT)
-        self.label_name = tk.Label(self.entry_frame, text='Name', font=config.S_LABEL_FONT)
-        self.label_sex = tk.Label(self.entry_frame, text='Sex', font=config.S_LABEL_FONT)
-        self.label_age = tk.Label(self.entry_frame, text='Entrance Age', font=config.S_LABEL_FONT)
-        self.label_year = tk.Label(self.entry_frame, text='Entrance Year', font=config.S_LABEL_FONT)
-        self.label_class = tk.Label(self.entry_frame, text='Class', font=config.S_LABEL_FONT)
+        self.label_id = tk.Label(self.entry_frame, text='Student ID', font=config.LABEL_FONT)
+        self.label_name = tk.Label(self.entry_frame, text='Name', font=config.LABEL_FONT)
+        self.label_sex = tk.Label(self.entry_frame, text='Sex', font=config.LABEL_FONT)
+        self.label_age = tk.Label(self.entry_frame, text='Entrance Age', font=config.LABEL_FONT)
+        self.label_year = tk.Label(self.entry_frame, text='Entrance Year', font=config.LABEL_FONT)
+        self.label_class = tk.Label(self.entry_frame, text='Class', font=config.LABEL_FONT)
 
         # 2
         self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
-                                 font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+                                 font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
         self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
-                                   font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+                                   font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
         self.entry_Sex = tk.Entry(self.entry_frame, textvariable=self.sex,
-                                  font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+                                  font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
         self.entry_Age = tk.Entry(self.entry_frame, textvariable=self.age,
-                                  font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+                                  font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
         self.entry_Year = tk.Entry(self.entry_frame, textvariable=self.year,
-                                   font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+                                   font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
         self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
-                                    font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+                                    font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
 
         # 3
-        self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font=config.S_BUTTON_SMALL,
+        self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font=config.BUTTON_SMALL,
                                        command=lambda: self.search())
 
         # 1
@@ -124,41 +123,41 @@ class StudentView:
         self.mod_frame = tk.Frame(self.main_frame)
 
         # 1
-        self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Student ID', font=config.S_LABEL_FONT)
+        self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Student ID', font=config.LABEL_FONT)
         self.entry_mod_search_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_id,
-                                            font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+                                            font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
         # 2
-        self.button_id_search = tk.Button(self.mod_frame, text='Search', font=config.S_BUTTON_MEDIUM,
+        self.button_id_search = tk.Button(self.mod_frame, text='Search', font=config.BUTTON_MEDIUM,
                                           command=lambda: self.id_search(), pady=2, padx=10)
-        self.button_update = tk.Button(self.mod_frame, text='Update', font=config.S_BUTTON_MEDIUM,
+        self.button_update = tk.Button(self.mod_frame, text='Update', font=config.BUTTON_MEDIUM,
                                        command=lambda: self.update(), pady=2, padx=10)
-        self.button_add = tk.Button(self.mod_frame, text='+', font=config.S_BUTTON_SIGN,
+        self.button_add = tk.Button(self.mod_frame, text='+', font=config.BUTTON_SIGN,
                                     command=lambda: self.toggle_add(), pady=2, padx=10)
-        self.button_delete = tk.Button(self.mod_frame, text='-', font=config.S_BUTTON_SIGN,
+        self.button_delete = tk.Button(self.mod_frame, text='-', font=config.BUTTON_SIGN,
                                        command=lambda: self.delete(), pady=2, padx=10)
 
         # 3
-        self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font=config.S_ENTRY_FONT)
+        self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font=config.ENTRY_FONT)
         self.entry_mod_name = tk.Entry(self.mod_frame, textvariable=self.mod_name,
-                                       font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
         self.entry_mod_sex = tk.Entry(self.mod_frame, textvariable=self.mod_sex,
-                                      font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+                                      font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
         self.entry_mod_age = tk.Entry(self.mod_frame, textvariable=self.mod_age,
-                                      font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+                                      font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
         self.entry_mod_year = tk.Entry(self.mod_frame, textvariable=self.mod_year,
-                                       font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
         self.entry_mod_class = tk.Entry(self.mod_frame, textvariable=self.mod_class,
-                                        font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+                                        font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
 
         # 4
-        self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font=config.S_LABEL_FONT)
-        self.label_mod_sex_hint = tk.Label(self.mod_frame, text='Sex', font=config.S_LABEL_FONT)
-        self.label_mod_age_hint = tk.Label(self.mod_frame, text='Entrance Age', font=config.S_LABEL_FONT)
-        self.label_mod_year_hint = tk.Label(self.mod_frame, text='Entrance Year', font=config.S_LABEL_FONT)
-        self.label_mod_class_hint = tk.Label(self.mod_frame, text='Class', font=config.S_LABEL_FONT)
+        self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font=config.LABEL_FONT)
+        self.label_mod_sex_hint = tk.Label(self.mod_frame, text='Sex', font=config.LABEL_FONT)
+        self.label_mod_age_hint = tk.Label(self.mod_frame, text='Entrance Age', font=config.LABEL_FONT)
+        self.label_mod_year_hint = tk.Label(self.mod_frame, text='Entrance Year', font=config.LABEL_FONT)
+        self.label_mod_class_hint = tk.Label(self.mod_frame, text='Class', font=config.LABEL_FONT)
 
         # 5
-        self.label_update_succeed_status = tk.Label(self.mod_frame, text='', font=config.S_EXCEPTION_FONT, fg='red')
+        self.label_update_succeed_status = tk.Label(self.mod_frame, text='', font=config.EXCEPTION_FONT, fg='red')
 
         # 1
         self.label_mod_search_id_hint.grid(row=0, column=0)
@@ -188,35 +187,35 @@ class StudentView:
         self.add_frame = tk.Frame(self.main_frame)
 
         # 1
-        self.label_add_id = tk.Label(self.add_frame, text='Student ID', font=config.S_LABEL_FONT)
-        self.label_add_name = tk.Label(self.add_frame, text='Name', font=config.S_LABEL_FONT)
-        self.label_add_sex = tk.Label(self.add_frame, text='Sex', font=config.S_LABEL_FONT)
-        self.label_add_age = tk.Label(self.add_frame, text='Entrance Age', font=config.S_LABEL_FONT)
-        self.label_add_year = tk.Label(self.add_frame, text='Entrance Year', font=config.S_LABEL_FONT)
-        self.label_add_class = tk.Label(self.add_frame, text='Class', font=config.S_LABEL_FONT)
+        self.label_add_id = tk.Label(self.add_frame, text='Student ID', font=config.LABEL_FONT)
+        self.label_add_name = tk.Label(self.add_frame, text='Name', font=config.LABEL_FONT)
+        self.label_add_sex = tk.Label(self.add_frame, text='Sex', font=config.LABEL_FONT)
+        self.label_add_age = tk.Label(self.add_frame, text='Entrance Age', font=config.LABEL_FONT)
+        self.label_add_year = tk.Label(self.add_frame, text='Entrance Year', font=config.LABEL_FONT)
+        self.label_add_class = tk.Label(self.add_frame, text='Class', font=config.LABEL_FONT)
 
         # 2
         self.entry_add_id = tk.Entry(self.add_frame, textvariable=self.add_id,
-                                     font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+                                     font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
         self.entry_add_name = tk.Entry(self.add_frame, textvariable=self.add_name,
-                                       font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
         self.entry_add_sex = tk.Entry(self.add_frame, textvariable=self.add_sex,
-                                      font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+                                      font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
         self.entry_add_age = tk.Entry(self.add_frame, textvariable=self.add_age,
-                                      font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+                                      font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
         self.entry_add_year = tk.Entry(self.add_frame, textvariable=self.add_year,
-                                       font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
         self.entry_add_class = tk.Entry(self.add_frame, textvariable=self.add_class,
-                                        font=config.S_ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+                                        font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
 
         # 3
-        self.button_add_add = tk.Button(self.add_frame, text='+', font=config.S_BUTTON_MEDIUM,
+        self.button_add_add = tk.Button(self.add_frame, text='+', font=config.BUTTON_MEDIUM,
                                         command=lambda: self.insert())
         # self.button_add_back = tk.Button(self.add_frame, text='Back', font=config.S_BUTTON_MEDIUM,
         #                                  command=lambda: self.add_back())
 
         # 4
-        self.label_add_success_status = tk.Label(self.add_frame, text='', font=config.S_EXCEPTION_FONT, fg='red')
+        self.label_add_success_status = tk.Label(self.add_frame, text='', font=config.EXCEPTION_FONT, fg='red')
 
         # 1
         self.label_add_id.grid(row=0, column=0)

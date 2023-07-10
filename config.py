@@ -7,6 +7,13 @@ TABLE_ROW_FONT = 'Arial', 18
 TABLE_ROW_DISPLAY_NUMBER = 9
 
 
+# LABEL AND BUTTON
+LABEL_FONT = 'Arial, 16'
+ENTRY_FONT = 'Arial, 20'
+EXCEPTION_FONT = 'Arial, 15'
+BUTTON_SMALL = 'Arial, 18'
+BUTTON_MEDIUM = 'Arial, 20'
+BUTTON_SIGN = 'Arial, 28'
 
 
 # Student Custom
@@ -15,13 +22,15 @@ S_TREE_HEADING_INFO = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Ye
 S_TREE_WIDTH_CONFIG = [160, 140, 90, 140, 140, 120]
 S_TREE_MIN_WIDTH_CONFIG = [115, 80, 80, 120, 120, 80]
 
-S_LABEL_FONT = 'Arial, 16'
-S_ENTRY_FONT = 'Arial, 20'
-S_EXCEPTION_FONT = 'Arial, 15'
-S_BUTTON_SMALL = 'Arial, 18'
-S_BUTTON_MEDIUM = 'Arial, 20'
-S_BUTTON_SIGN = 'Arial, 28'
 
 S_ENTRY_WIDTH = [14, 10, 10, 12, 12, 10]
 
+
+# Teacher Custom
+T_TREE_COLUMN = (0, 1, 2)
+T_TREE_HEADING_INFO = ['Teacher ID', 'Name', 'Course']
+T_TREE_WIDTH_CONFIG = [160, 140, 90]
+T_TREE_MIN_WIDTH_CONFIG = [115, 80, 80]
+
+T_ENTRY_WIDTH = [14, 10, 10]
 

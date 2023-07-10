@@ -106,7 +106,7 @@ class MainWindow:
         # Create Student Info Manager Box
         self.student_view = StudentView.StudentView(self.window)
 
-        self.teacher_view = TeacherView.TeacherView(self.window, self.tree)
+        self.teacher_view = TeacherView.TeacherView(self.window)
 
         self.course_view = CourseView.CourseView(self.window, self.tree)
 
@@ -142,6 +142,7 @@ class MainWindow:
 
         # Login all window TODO FILL
         self.student_view.login(self.status)
+        self.teacher_view.login(self.status)
 
 
         # Show default page
@@ -155,6 +156,7 @@ class MainWindow:
 
         # Logout all window TODO FILL
         self.student_view.logout()
+        self.teacher_view.logout()
 
         # -- #
         self.tree_frame.pack_forget()
@@ -170,7 +172,7 @@ class MainWindow:
     def switch_teacher(self):
         self.current_window.hide()
         self.current_window = self.teacher_view
-        self.current_window.show(self.tree, status=self.status)
+        self.current_window.show()
 
     def switch_course(self):
         self.current_window.hide()
