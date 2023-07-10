@@ -246,25 +246,25 @@ class TeacherView:
             SQL = '''SELECT * From Teacher '''
             if search_id:
                 SQL += '''
-                WHERE "Teacher ID" LIKE '%''' + '''%s''' % search_id + "'"
+WHERE "Teacher ID" LIKE '%''' + '''%s''' % search_id + "'"
                 has_where = True
 
             if name:
                 if has_where:
                     SQL += '''
-                    AND "Name" LIKE '%''' + '''%s''' % name + "%'"
+    AND "Name" LIKE '%''' + '''%s''' % name + "%'"
                 else:
                     SQL += '''
-                    WHERE "Name" LIKE '%''' + '''%s''' % name + "%'"
+WHERE "Name" LIKE '%''' + '''%s''' % name + "%'"
                     has_where = True
 
             if course_id:
                 if has_where:
                     SQL += '''
-                    AND "Course" LIKE ''' + "'%" + '''%s''' % course_id + "'"
+    AND "Course" LIKE ''' + "'%" + '''%s''' % course_id + "'"
                 else:
                     SQL += '''
-                    WHERE "Course" LIKE ''' + "'%" + '''%s''' % course_id + "'"
+WHERE "Course" LIKE ''' + "'%" + '''%s''' % course_id + "'"
 
 
             print(SQL)
@@ -281,7 +281,7 @@ class TeacherView:
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''SELECT * From Teacher 
-            WHERE "Teacher ID" = '%s' ''' % search_id
+WHERE "Teacher ID" = '%s' ''' % search_id
 
             print(SQL)
             temp_cursor.execute(SQL)
@@ -305,13 +305,11 @@ class TeacherView:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''INSERT INTO Teacher 
-                VALUES( '''
-                SQL += '''
-                    '%s',''' % search_id
-                SQL += '''
-                    '%s',''' % name
-                SQL += '''
-                    '%s')''' % course_id
+VALUES (
+        '%s',
+        '%s',
+        '%s'
+       )''' % (search_id, name, course_id)
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -348,9 +346,9 @@ class TeacherView:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''UPDATE Teacher 
-                SET "Name" = '%s',
-                    "Course" = '%s' 
-                WHERE "Teacher ID" = '%s' ''' % (name, course_id, search_id)
+SET "Name" = '%s',
+    "Course" = '%s' 
+WHERE "Teacher ID" = '%s' ''' % (name, course_id, search_id)
 
                 print(SQL)
                 temp_cursor.execute(SQL)

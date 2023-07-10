@@ -291,51 +291,51 @@ class StudentView:
             SQL = '''SELECT * From Student '''
             if search_id:
                 SQL += '''
-                WHERE "Student ID" LIKE '%''' + '''%s''' % search_id + "'"
+WHERE "Student ID" LIKE '%''' + '''%s''' % search_id + "'"
                 has_where = True
 
             if name:
                 if has_where:
                     SQL += '''
-                    AND "Name" LIKE '%''' + '''%s''' % name + "%'"
+    AND "Name" LIKE '%''' + '''%s''' % name + "%'"
                 else:
                     SQL += '''
-                    WHERE "Name" LIKE '%''' + '''%s''' % name + "%'"
+WHERE "Name" LIKE '%''' + '''%s''' % name + "%'"
                     has_where = True
             if sex:
                 if has_where:
                     SQL += '''
-                    AND "Sex" LIKE ''' + "'" + '''%s''' % sex + "%'"
+    AND "Sex" LIKE ''' + "'" + '''%s''' % sex + "%'"
                 else:
                     SQL += '''
-                    WHERE "Sex" LIKE ''' + "'" + '''%s''' % sex + "%'"
+WHERE "Sex" LIKE ''' + "'" + '''%s''' % sex + "%'"
                     has_where = True
 
             if age:
                 if has_where:
                     SQL += '''
-                    AND "Entrance Age" = '%s' ''' % age
+    AND "Entrance Age" = '%s' ''' % age
                 else:
                     SQL += '''
-                    WHERE "Entrance Age" = '%s' ''' % age
+WHERE "Entrance Age" = '%s' ''' % age
                     has_where = True
 
             if year:
                 if has_where:
                     SQL += '''
-                    AND "Entrance Year" LIKE ''' + "'%" + '''%s''' % year + "'"
+    AND "Entrance Year" LIKE ''' + "'%" + '''%s''' % year + "'"
                 else:
                     SQL += '''
-                    WHERE "Entrance Year" LIKE ''' + "'%" + '''%s''' % year + "'"
+WHERE "Entrance Year" LIKE ''' + "'%" + '''%s''' % year + "'"
                     has_where = True
 
             if s_class:
                 if has_where:
                     SQL += '''
-                    AND "Class" LIKE ''' + "'%" + '''%s''' % s_class + "%'"
+    AND "Class" LIKE ''' + "'%" + '''%s''' % s_class + "%'"
                 else:
                     SQL += '''
-                    WHERE "Class" LIKE ''' + "'%" + '''%s''' % s_class + "%'"
+WHERE "Class" LIKE ''' + "'%" + '''%s''' % s_class + "%'"
 
             print(SQL)
             temp_cursor.execute(SQL)
@@ -351,7 +351,7 @@ class StudentView:
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''SELECT * From Student 
-            WHERE "Student ID" = '%s' ''' % search_id
+WHERE "Student ID" = '%s' ''' % search_id
 
             print(SQL)
             temp_cursor.execute(SQL)
@@ -381,19 +381,14 @@ class StudentView:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''INSERT INTO Student 
-                VALUES( '''
-                SQL += '''
-                    '%s',''' % search_id
-                SQL += '''
-                    '%s',''' % name
-                SQL += '''
-                    '%s',''' % sex
-                SQL += '''
-                    '%s',''' % age
-                SQL += '''
-                    '%s',''' % year
-                SQL += '''
-                    '%s')''' % s_class
+VALUES (
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s',
+        '%s'
+       )''' % (search_id, name, sex, age, year, s_class)
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -433,24 +428,12 @@ class StudentView:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''UPDATE Student 
-                SET '''
-                if name:
-                    SQL += '''
-                        "Name" = '%s',''' % name
-                if sex:
-                    SQL += '''
-                        "Sex" = '%s',''' % sex
-                if age:
-                    SQL += '''
-                        "Entrance Age" = '%s',''' % age
-                if year:
-                    SQL += '''
-                        "Entrance Year" = '%s',''' % year
-                if s_class:
-                    SQL += '''
-                        "Class" = '%s' ''' % s_class
-                SQL += '''
-                WHERE "Student ID" = '%s' ''' % search_id
+SET "Name" = '%s',
+    "Sex" = '%s',
+    "Entrance Age" = '%s',
+    "Entrance Year" = '%s',
+    "Class" = '%s'
+WHERE "Student ID" = '%s' ''' % (name, sex, age, year, s_class, search_id)
 
                 print(SQL)
                 temp_cursor.execute(SQL)
