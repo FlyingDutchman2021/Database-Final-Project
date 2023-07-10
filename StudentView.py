@@ -85,6 +85,7 @@ class StudentView:
                                    font='Arial, 20', width=12)
         self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
                                     font='Arial, 20', width=10)
+
         self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font='Arial, 18',
                                        command=lambda: self.search())
 
@@ -94,20 +95,24 @@ class StudentView:
         self.label_age.grid(row=0, column=3)
         self.label_year.grid(row=0, column=4)
         self.label_class.grid(row=0, column=5)
+
         self.entry_ID.grid(row=1, column=0)
         self.entry_Name.grid(row=1, column=1)
         self.entry_Sex.grid(row=1, column=2)
         self.entry_Age.grid(row=1, column=3)
         self.entry_Year.grid(row=1, column=4)
         self.entry_Class.grid(row=1, column=5)
+
         self.button_search.grid(row=1, column=6)
 
         # Create Modification Frame
         self.mod_frame = tk.Frame(self.main_frame)
+
+        # 1
         self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Student ID', font='Arial, 16')
         self.entry_mod_search_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_id,
                                             font='Arial, 20', width=14)
-
+        # 2
         self.button_id_search = tk.Button(self.mod_frame, text='Search', font='Arial 20',
                                           command=lambda: self.id_search())
         self.button_update = tk.Button(self.mod_frame, text='Update', font='Arial, 20',
@@ -117,6 +122,7 @@ class StudentView:
         self.button_delete = tk.Button(self.mod_frame, text='-', font='Arial, 28',
                                        command=lambda: self.delete())
 
+        # 3
         self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font='Arial, 16')
         self.entry_mod_name = tk.Entry(self.mod_frame, textvariable=self.mod_name,
                                        font='Arial, 20', width=14)
@@ -129,24 +135,29 @@ class StudentView:
         self.entry_mod_class = tk.Entry(self.mod_frame, textvariable=self.mod_class,
                                         font='Arial, 20', width=12)
 
+        # 4
         self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font='Arial, 16')
         self.label_mod_sex_hint = tk.Label(self.mod_frame, text='Sex', font='Arial, 16')
         self.label_mod_age_hint = tk.Label(self.mod_frame, text='Entrance Age', font='Arial, 16')
         self.label_mod_year_hint = tk.Label(self.mod_frame, text='Entrance Year', font='Arial, 16')
         self.label_mod_class_hint = tk.Label(self.mod_frame, text='Class', font='Arial, 16')
 
+        # 1
         self.label_mod_search_id_hint.grid(row=0, column=0)
         self.entry_mod_search_id.grid(row=1, column=0)
+        # 2
         self.button_id_search.grid(row=1, column=1)
         self.button_update.grid(row=1, column=2)
         self.button_add.grid(row=1, column=3)
         self.button_delete.grid(row=1, column=4)
+        # 3
         self.label_mod_name_hint.grid(row=2, column=1)
         self.label_mod_sex_hint.grid(row=2, column=2)
         self.label_mod_age_hint.grid(row=2, column=3)
         self.label_mod_year_hint.grid(row=2, column=4)
         self.label_mod_class_hint.grid(row=2, column=5)
         self.label_mod_search_id.grid(row=3, column=0)
+        # 4
         self.entry_mod_name.grid(row=3, column=1)
         self.entry_mod_sex.grid(row=3, column=2)
         self.entry_mod_age.grid(row=3, column=3)
@@ -155,12 +166,19 @@ class StudentView:
 
         # Create Add Frame
         self.add_frame = tk.Frame(self.main_frame)
+
+
+
+        # 1
         self.label_add_id = tk.Label(self.add_frame, text='Student ID', font='Arial, 16')
         self.label_add_name = tk.Label(self.add_frame, text='Name', font='Arial, 16')
         self.label_add_sex = tk.Label(self.add_frame, text='Sex', font='Arial, 16')
         self.label_add_age = tk.Label(self.add_frame, text='Entrance Age', font='Arial, 16')
         self.label_add_year = tk.Label(self.add_frame, text='Entrance Year', font='Arial, 16')
         self.label_add_class = tk.Label(self.add_frame, text='Class', font='Arial, 16')
+
+
+        # 2
         self.entry_add_id = tk.Entry(self.add_frame, textvariable=self.add_id,
                                      font='Arial, 20', width=14)
         self.entry_add_name = tk.Entry(self.add_frame, textvariable=self.add_name,
@@ -173,25 +191,35 @@ class StudentView:
                                        font='Arial, 20', width=14)
         self.entry_add_class = tk.Entry(self.add_frame, textvariable=self.add_class,
                                         font='Arial, 20', width=14)
+
+        # 3
         self.button_add_add = tk.Button(self.add_frame, text='+', font='Arial, 20',
                                         command=lambda: self.insert())
         self.button_add_back = tk.Button(self.add_frame, text='Back', font='Arial, 20',
                                          command=lambda: self.add_back())
+
+
+        # 1
         self.label_add_id.grid(row=0, column=0)
         self.label_add_name.grid(row=0, column=1)
         self.label_add_sex.grid(row=0, column=2)
         self.label_add_age.grid(row=0, column=3)
         self.label_add_year.grid(row=0, column=4)
         self.label_add_class.grid(row=0, column=5)
+        # 2
         self.entry_add_id.grid(row=1, column=0)
         self.entry_add_name.grid(row=1, column=1)
         self.entry_add_sex.grid(row=1, column=2)
         self.entry_add_age.grid(row=1, column=3)
         self.entry_add_year.grid(row=1, column=4)
         self.entry_add_class.grid(row=1, column=5)
+        # 3
         self.button_add_add.grid(row=2, column=0)
         self.button_add_back.grid(row=2, column=1)
 
+
+
+        # Pack Each Frame nto Main Frame
         self.entry_frame.pack(pady=2)
         self.tree_frame.pack()
 
