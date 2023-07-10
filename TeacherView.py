@@ -68,7 +68,7 @@ class TeacherView:
         self.entry_frame = tk.Frame(self.main_frame)
 
         # 1
-        self.label_id = tk.Label(self.entry_frame, text='Student ID', font=config.LABEL_FONT)
+        self.label_id = tk.Label(self.entry_frame, text='Teacher ID', font=config.LABEL_FONT)
         self.label_name = tk.Label(self.entry_frame, text='Name', font=config.LABEL_FONT)
         self.label_course_id = tk.Label(self.entry_frame, text='Course ID', font=config.LABEL_FONT)
 
@@ -162,7 +162,7 @@ class TeacherView:
         self.add_frame = tk.Frame(self.main_frame)
 
         # 1
-        self.label_add_id = tk.Label(self.add_frame, text='Student ID', font=config.LABEL_FONT)
+        self.label_add_id = tk.Label(self.add_frame, text='Teacher ID', font=config.LABEL_FONT)
         self.label_add_name = tk.Label(self.add_frame, text='Name', font=config.LABEL_FONT)
         self.label_add_course_id = tk.Label(self.add_frame, text='Course ID', font=config.LABEL_FONT)
 
