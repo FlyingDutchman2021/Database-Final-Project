@@ -45,4 +45,6 @@ class LoginView:
             status.append('Teacher')
             login_function()
         else:
-            pass
+            status.pop()
+            status.append('S')
+            login_function()

@@ -2,7 +2,7 @@ import tkinter as tk
 import sqlite3
 
 
-class StudentDetailView:
+class StudentCourseView:
     def __init__(self, window, tree):
         # Create Display Frame
 
@@ -32,16 +32,16 @@ class StudentDetailView:
 
     def show(self, tree):
         # Configure column number
-        tree["columns"] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+        tree["columns"] = (0, 1, 2, 3, 4, 5, 6, 7)
         # Set Tree heading Info
-        heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class', 'Course ID',
+        heading_info = ['Student ID', 'Name', 'Course ID',
                         'Course Name', 'Teacher ID', 'Credit', 'Grade', 'Canceled Year']
         for i in range(len(heading_info)):
             tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140, 120, 160, 140, 90, 140, 140, 120]
-        min_width_config = [115, 80, 80, 120, 120, 80, 115, 80, 80, 120, 120, 80]
+        width_config = [160, 140, 90, 140, 140, 120, 80, 180]
+        min_width_config = [115, 80, 80, 120, 120, 80, 80, 180]
         for i in range(len(width_config)):
             tree.column('%d' %i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
@@ -79,14 +79,14 @@ class StudentDetailView:
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''SELECT S."Student ID", S.Name, S.Sex, S."Entrance Age", S."Entrance Year", S.Class,
+            SQL = '''SELECT S."Student ID", S.Name,
                        C."Course ID", C.Name, Choose."Teacher ID", C.Credit, C.Grade, C."Canceled Year"
                     From Choose INNER JOIN Course C ON Choose."Course ID" = C."Course ID"
                     INNER JOIN Student S on S."Student ID" = Choose."Student ID" '''
 
             if generated_id:
                 SQL += '''
-                AND S."Student ID" = '%s' ''' % generated_id
+                WHERE S."Student ID" = '%s' ''' % generated_id
             elif name:
                 SQL += '''
                 WHERE S."Name" = '%s' ''' % name

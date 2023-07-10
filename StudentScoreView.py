@@ -2,7 +2,7 @@ import tkinter as tk
 import sqlite3
 
 
-class StudentDetailView:
+class StudentScoreView:
     def __init__(self, window, tree):
         # Create Display Frame
 
@@ -19,7 +19,9 @@ class StudentDetailView:
 
         # Create Label
         self.label_id = tk.Label(self.entry_frame, text='Student ID')
-        self.label_name = tk.Label(self.entry_frame, text='Name')
+        self.label_name = tk.Label(self.entry_frame, text='Student Name')
+        self.label_course_id = tk.Label(self.entry_frame, text='Course ID')
+        self.label_course_name = tk.Label(self.entry_frame, text='Course Name')
 
 
         # Create Entry
@@ -30,18 +32,26 @@ class StudentDetailView:
         self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
                                    font='Arial, 20', width=10)
 
+        self.course_id = tk.StringVar()
+        self.entry_course_ID = tk.Entry(self.entry_frame, textvariable=self.course_id,
+                                 font='Arial, 20', width=14)
+
+        self.course_name = tk.StringVar()
+        self.entry_course_name = tk.Entry(self.entry_frame, textvariable=self.course_name,
+                                 font='Arial, 20', width=14)
+
     def show(self, tree):
         # Configure column number
-        tree["columns"] = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+        tree["columns"] = (0, 1, 2, 3, 4)
         # Set Tree heading Info
-        heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class', 'Course ID',
-                        'Course Name', 'Teacher ID', 'Credit', 'Grade', 'Canceled Year']
+        heading_info = ['Student ID', 'Name', 'Course ID',
+                        'Course Name', 'Score']
         for i in range(len(heading_info)):
             tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140, 120, 160, 140, 90, 140, 140, 120]
-        min_width_config = [115, 80, 80, 120, 120, 80, 115, 80, 80, 120, 120, 80]
+        width_config = [160, 140, 90, 140, 140]
+        min_width_config = [115, 80, 80, 120, 120]
         for i in range(len(width_config)):
             tree.column('%d' %i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
@@ -54,9 +64,13 @@ class StudentDetailView:
         self.entry_frame.pack()
         self.label_id.grid(row=0, column=0)
         self.label_name.grid(row=0, column=1)
+        self.label_course_id.grid(row=0, column=2)
+        self.label_course_name.grid(row=0, column=3)
 
         self.entry_ID.grid(row=1, column=0)
         self.entry_Name.grid(row=1, column=1)
+        self.entry_course_ID.grid(row=1, column=2)
+        self.entry_course_name.grid(row=1, column=3)
 
 
         # Initial sheet data
@@ -75,21 +89,43 @@ class StudentDetailView:
     def search(self, tree):
         generated_id = self.id.get()
         name = self.name.get().title()
+        course_id = self.course_id.get()
+        course_name = self.course_name.get()
 
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''SELECT S."Student ID", S.Name, S.Sex, S."Entrance Age", S."Entrance Year", S.Class,
-                       C."Course ID", C.Name, Choose."Teacher ID", C.Credit, C.Grade, C."Canceled Year"
+            SQL = '''SELECT S."Student ID", S.Name,
+                       C."Course ID", C.Name, Choose.Score
                     From Choose INNER JOIN Course C ON Choose."Course ID" = C."Course ID"
                     INNER JOIN Student S on S."Student ID" = Choose."Student ID" '''
-
+            has_where = False
             if generated_id:
                 SQL += '''
-                AND S."Student ID" = '%s' ''' % generated_id
+                WHERE S."Student ID" = '%s' ''' % generated_id
+                has_where = True
             elif name:
                 SQL += '''
                 WHERE S."Name" = '%s' ''' % name
+                has_where = True
+            if course_id:
+                if has_where:
+                    SQL += '''
+                            AND C."Course ID" = '%s' ''' % course_id
+                else:
+                    SQL += '''
+                            WHERE C."Course ID" = '%s' ''' % course_id
+            elif course_name:
+                if has_where:
+                    SQL += '''
+                            AND C."Name" = '%s' ''' % course_name
+                else:
+                    SQL += '''
+                            WHERE C."Name" = '%s' ''' % course_name
+
+
+
+
 
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
