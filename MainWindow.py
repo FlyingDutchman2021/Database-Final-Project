@@ -115,7 +115,7 @@ class MainWindow:
 
     def show_main_window(self):
         self.login_view.hide()
-        self.navigation_bar.pack()
+        self.navigation_bar.pack(pady=25)
         # self.tree_frame.pack()
 
         self.current_window = self.student_view

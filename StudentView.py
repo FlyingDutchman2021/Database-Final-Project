@@ -13,13 +13,23 @@ class StudentView:
         self.year = tk.StringVar()
         self.s_class = tk.StringVar()
 
+        self.mod_search_id = tk.StringVar()
+        self.current_selected_id = '---'
+        self.mod_name = tk.StringVar()
+        self.mod_sex = tk.StringVar()
+        self.mod_age = tk.StringVar()
+        self.mod_year = tk.StringVar()
+        self.mod_class = tk.StringVar()
 
+        self.add_id = tk.StringVar()
+        self.add_name = tk.StringVar()
+        self.add_sex = tk.StringVar()
+        self.add_age = tk.StringVar()
+        self.add_year = tk.StringVar()
+        self.add_class = tk.StringVar()
 
         # Create Display Frame
         self.main_frame = tk.Frame(window)
-
-
-
 
         # Create Table Frame
         self.tree_frame = tk.Frame(self.main_frame)
@@ -31,8 +41,6 @@ class StudentView:
         style.configure('Treeview.Heading', font=('Arial', 18))
         style.configure('Treeview', font=('Arial', 18))
         style.configure('Treeview', rowheight=28)
-
-
 
         # Configure column number
         self.tree["columns"] = (0, 1, 2, 3, 4, 5)
@@ -47,30 +55,10 @@ class StudentView:
         for i in range(len(width_config)):
             self.tree.column('%d' % i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
-
-
         self.scrollbar.configure(command=self.tree.yview)
 
         self.scrollbar.pack(side='right', fill='y', pady=15)
         self.tree.pack(side='left', padx=5, pady=15)
-
-
-
-
-
-
-
-        # Create Button Frame
-        self.button_frame = tk.Frame(self.main_frame)
-        self.button_search = tk.Button(self.button_frame, text='Search', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.search())
-        self.button_update = tk.Button(self.button_frame, text='Update', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.update())
-        self.button_add = tk.Button(self.button_frame, text='+', padx=50, pady=15, font='Arial, 28',
-                                    command=lambda: self.insert())
-        self.button_delete = tk.Button(self.button_frame, text='-', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.delete())
-
 
         # Create Entry Frame
         self.entry_frame = tk.Frame(self.main_frame)
@@ -78,13 +66,12 @@ class StudentView:
         self.entry_frame.rowconfigure(0, weight=1, pad=0)
         self.entry_frame.rowconfigure(1, weight=1, pad=0)
 
-        self.label_id = tk.Label(self.entry_frame, text='Student ID')
-        self.label_name = tk.Label(self.entry_frame, text='Name')
-        self.label_sex = tk.Label(self.entry_frame, text='Sex')
-        self.label_age = tk.Label(self.entry_frame, text='Entrance Age')
-        self.label_year = tk.Label(self.entry_frame, text='Entrance Year')
-        self.label_class = tk.Label(self.entry_frame, text='Class')
-
+        self.label_id = tk.Label(self.entry_frame, text='Student ID', font='Arial, 16')
+        self.label_name = tk.Label(self.entry_frame, text='Name', font='Arial, 16')
+        self.label_sex = tk.Label(self.entry_frame, text='Sex', font='Arial, 16')
+        self.label_age = tk.Label(self.entry_frame, text='Entrance Age', font='Arial, 16')
+        self.label_year = tk.Label(self.entry_frame, text='Entrance Year', font='Arial, 16')
+        self.label_class = tk.Label(self.entry_frame, text='Class', font='Arial, 16')
 
         self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
                                  font='Arial, 20', width=14)
@@ -98,6 +85,8 @@ class StudentView:
                                    font='Arial, 20', width=12)
         self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
                                     font='Arial, 20', width=10)
+        self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font='Arial, 18',
+                                       command=lambda: self.search())
 
         self.label_id.grid(row=0, column=0)
         self.label_name.grid(row=0, column=1)
@@ -111,30 +100,115 @@ class StudentView:
         self.entry_Age.grid(row=1, column=3)
         self.entry_Year.grid(row=1, column=4)
         self.entry_Class.grid(row=1, column=5)
+        self.button_search.grid(row=1, column=6)
 
+        # Create Modification Frame
+        self.mod_frame = tk.Frame(self.main_frame)
+        self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Student ID', font='Arial, 16')
+        self.entry_mod_search_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_id,
+                                            font='Arial, 20', width=14)
 
+        self.button_id_search = tk.Button(self.mod_frame, text='Search', font='Arial 20',
+                                          command=lambda: self.id_search())
+        self.button_update = tk.Button(self.mod_frame, text='Update', font='Arial, 20',
+                                       command=lambda: self.update())
+        self.button_add = tk.Button(self.mod_frame, text='+', font='Arial, 28',
+                                    command=lambda: self.add_go_to())
+        self.button_delete = tk.Button(self.mod_frame, text='-', font='Arial, 28',
+                                       command=lambda: self.delete())
+
+        self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font='Arial, 16')
+        self.entry_mod_name = tk.Entry(self.mod_frame, textvariable=self.mod_name,
+                                       font='Arial, 20', width=14)
+        self.entry_mod_sex = tk.Entry(self.mod_frame, textvariable=self.mod_sex,
+                                      font='Arial, 20', width=12)
+        self.entry_mod_age = tk.Entry(self.mod_frame, textvariable=self.mod_age,
+                                      font='Arial, 20', width=12)
+        self.entry_mod_year = tk.Entry(self.mod_frame, textvariable=self.mod_year,
+                                       font='Arial, 20', width=12)
+        self.entry_mod_class = tk.Entry(self.mod_frame, textvariable=self.mod_class,
+                                        font='Arial, 20', width=12)
+
+        self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font='Arial, 16')
+        self.label_mod_sex_hint = tk.Label(self.mod_frame, text='Sex', font='Arial, 16')
+        self.label_mod_age_hint = tk.Label(self.mod_frame, text='Entrance Age', font='Arial, 16')
+        self.label_mod_year_hint = tk.Label(self.mod_frame, text='Entrance Year', font='Arial, 16')
+        self.label_mod_class_hint = tk.Label(self.mod_frame, text='Class', font='Arial, 16')
+
+        self.label_mod_search_id_hint.grid(row=0, column=0)
+        self.entry_mod_search_id.grid(row=1, column=0)
+        self.button_id_search.grid(row=1, column=1)
+        self.button_update.grid(row=1, column=2)
+        self.button_add.grid(row=1, column=3)
+        self.button_delete.grid(row=1, column=4)
+        self.label_mod_name_hint.grid(row=2, column=1)
+        self.label_mod_sex_hint.grid(row=2, column=2)
+        self.label_mod_age_hint.grid(row=2, column=3)
+        self.label_mod_year_hint.grid(row=2, column=4)
+        self.label_mod_class_hint.grid(row=2, column=5)
+        self.label_mod_search_id.grid(row=3, column=0)
+        self.entry_mod_name.grid(row=3, column=1)
+        self.entry_mod_sex.grid(row=3, column=2)
+        self.entry_mod_age.grid(row=3, column=3)
+        self.entry_mod_year.grid(row=3, column=4)
+        self.entry_mod_class.grid(row=3, column=5)
+
+        # Create Add Frame
+        self.add_frame = tk.Frame(self.main_frame)
+        self.label_add_id = tk.Label(self.add_frame, text='Student ID', font='Arial, 16')
+        self.label_add_name = tk.Label(self.add_frame, text='Name', font='Arial, 16')
+        self.label_add_sex = tk.Label(self.add_frame, text='Sex', font='Arial, 16')
+        self.label_add_age = tk.Label(self.add_frame, text='Entrance Age', font='Arial, 16')
+        self.label_add_year = tk.Label(self.add_frame, text='Entrance Year', font='Arial, 16')
+        self.label_add_class = tk.Label(self.add_frame, text='Class', font='Arial, 16')
+        self.entry_add_id = tk.Entry(self.add_frame, textvariable=self.add_id,
+                                     font='Arial, 20', width=14)
+        self.entry_add_name = tk.Entry(self.add_frame, textvariable=self.add_name,
+                                       font='Arial, 20', width=14)
+        self.entry_add_sex = tk.Entry(self.add_frame, textvariable=self.add_sex,
+                                      font='Arial, 20', width=14)
+        self.entry_add_age = tk.Entry(self.add_frame, textvariable=self.add_age,
+                                      font='Arial, 20', width=14)
+        self.entry_add_year = tk.Entry(self.add_frame, textvariable=self.add_year,
+                                       font='Arial, 20', width=14)
+        self.entry_add_class = tk.Entry(self.add_frame, textvariable=self.add_class,
+                                        font='Arial, 20', width=14)
+        self.button_add_add = tk.Button(self.add_frame, text='+', font='Arial, 20',
+                                        command=lambda: self.insert())
+        self.button_add_back = tk.Button(self.add_frame, text='Back', font='Arial, 20',
+                                         command=lambda: self.add_back())
+        self.label_add_id.grid(row=0, column=0)
+        self.label_add_name.grid(row=0, column=1)
+        self.label_add_sex.grid(row=0, column=2)
+        self.label_add_age.grid(row=0, column=3)
+        self.label_add_year.grid(row=0, column=4)
+        self.label_add_class.grid(row=0, column=5)
+        self.entry_add_id.grid(row=1, column=0)
+        self.entry_add_name.grid(row=1, column=1)
+        self.entry_add_sex.grid(row=1, column=2)
+        self.entry_add_age.grid(row=1, column=3)
+        self.entry_add_year.grid(row=1, column=4)
+        self.entry_add_class.grid(row=1, column=5)
+        self.button_add_add.grid(row=2, column=0)
+        self.button_add_back.grid(row=2, column=1)
+
+        self.entry_frame.pack(pady=2)
         self.tree_frame.pack()
-        self.button_frame.pack()
-        self.entry_frame.pack()
 
         # Initialize Tree
         self.search()
 
     def show(self, status):
 
-        # Configure Button Frame
-        self.button_search.pack(side='left', padx=10)
+        # Configure Mod Frame
         if status[0] == 'Admin':
-            self.button_update.pack(side='left', padx=10)
-            self.button_add.pack(side='left', padx=10)
-            self.button_delete.pack(side='left', padx=10)
-
+            self.mod_frame.pack()
         self.main_frame.pack()
 
     def hide(self):
         self.main_frame.pack_forget()
-        for widget in self.button_frame.winfo_children():
-            widget.pack_forget()
+        self.mod_frame.pack_forget()
+        self.add_frame.pack_forget()
 
     def search(self):
         generated_id = self.id.get()
@@ -209,13 +283,35 @@ class StudentView:
             for temp_row in temp_result:
                 self.tree.insert('', 'end', values=temp_row)
 
+    def id_search(self):
+        search_id = self.mod_search_id.get()
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''SELECT * From Student 
+            WHERE "Student ID" = '%s' ''' % search_id
+
+            print(SQL)
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if temp_result:
+                self.current_selected_id = temp_result[0][0]
+                self.label_mod_search_id.configure(text=temp_result[0][0])
+                self.mod_name.set(temp_result[0][1])
+                self.mod_sex.set(temp_result[0][2])
+                self.mod_age.set(temp_result[0][3])
+                self.mod_year.set(temp_result[0][4])
+                self.mod_class.set(temp_result[0][5])
+            else:
+                self.set_id_search_result()
+
     def insert(self):
-        generated_id = self.id.get()
-        name = self.name.get().title()
-        sex = self.sex.get().title()
-        age = self.age.get()
-        year = self.year.get()
-        s_class = self.s_class.get().upper()
+        generated_id = self.add_id.get()
+        name = self.add_name.get().title()
+        sex = self.add_sex.get().title()
+        age = self.add_age.get()
+        year = self.add_year.get()
+        s_class = self.add_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
@@ -238,22 +334,24 @@ class StudentView:
         self.search()
 
     def delete(self):
-        generated_id = self.id.get()
+        generated_id = self.current_selected_id
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''DELETE From Student WHERE "Student ID" = '%s' ''' % generated_id
             temp_cursor.execute(SQL)
             temp_cursor.close()
-        self.id.set('')
+        self.set_id_search_result()
         self.search()
 
     def update(self):
-        generated_id = self.id.get()
-        name = self.name.get().title()
-        sex = self.sex.get().title()
-        age = self.age.get()
-        year = self.year.get()
-        s_class = self.s_class.get().upper()
+        if self.current_selected_id == '---':
+            return
+        generated_id = self.current_selected_id
+        name = self.mod_name.get().title()
+        sex = self.mod_sex.get().title()
+        age = self.mod_age.get()
+        year = self.mod_year.get()
+        s_class = self.mod_class.get().upper()
 
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
@@ -279,3 +377,21 @@ class StudentView:
             temp_cursor.execute(SQL)
             temp_cursor.close()
         self.search()
+
+    def set_id_search_result(self, _id='---', _name='', _sex='',
+                             _age='', _year='', _class=''):
+        self.current_selected_id = _id
+        self.label_mod_search_id.configure(text=_id)
+        self.mod_name.set(_name)
+        self.mod_sex.set(_sex)
+        self.mod_age.set(_age)
+        self.mod_year.set(_year)
+        self.mod_class.set(_class)
+
+    def add_go_to(self):
+        self.mod_frame.pack_forget()
+        self.add_frame.pack()
+
+    def add_back(self):
+        self.add_frame.pack_forget()
+        self.mod_frame.pack()
