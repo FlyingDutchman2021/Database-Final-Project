@@ -3,14 +3,14 @@ import sqlite3
 
 
 class ChooseView:
-    def __init__(self, window, tree):
+    def __init__(self, window, tree, status):
 
         # Create Button
         self.button_frame = tk.Frame(window)
         self.button_search = tk.Button(self.button_frame, text='Search', padx=50, pady=15, font='Arial, 28',
                                        command=lambda: self.search(tree=tree))
         self.button_update = tk.Button(self.button_frame, text='Update', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.update(tree=tree))
+                                       command=lambda: self.update(tree=tree, status=status))
         self.button_add = tk.Button(self.button_frame, text='+', padx=50, pady=15, font='Arial, 28',
                                     command=lambda: self.insert(tree))
         self.button_delete = tk.Button(self.button_frame, text='-', padx=50, pady=15, font='Arial, 28',
@@ -61,9 +61,12 @@ class ChooseView:
 
         # Show Button
         self.button_search.pack(side='left', padx=10)
-        self.button_update.pack(side='left', padx=10)
-        self.button_add.pack(side='left', padx=10)
-        self.button_delete.pack(side='left', padx=10)
+        if status[0] == 'Admin':
+            self.button_update.pack(side='left', padx=10)
+            self.button_add.pack(side='left', padx=10)
+            self.button_delete.pack(side='left', padx=10)
+        elif status[0] == 'Teacher':
+            self.button_update.pack(side='left', padx=10)
         self.button_frame.pack()
 
         # Show Entry
@@ -93,6 +96,8 @@ class ChooseView:
             cursor.close()
 
     def hide(self):
+        for widget in self.button_frame.winfo_children():
+            widget.pack_forget()
         self.entry_frame.pack_forget()
         self.button_frame.pack_forget()
 
@@ -187,10 +192,11 @@ class ChooseView:
         self.course_id.set('')
         self.search(tree)
 
-    def update(self, tree):
+    def update(self, tree, status=None):
         student_id = self.student_id.get()
         course_id = self.course_id.get()
         teacher_id = self.teacher_id.get()
+        chosen_year = self.chosen_year.get()
         score = self.score.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
@@ -200,16 +206,19 @@ class ChooseView:
 
             SQL = '''UPDATE Choose 
             SET '''
-            if student_id:
+            if student_id and status[0] == 'Admin':
                 SQL += '''
                     "Student ID" = '%s',''' % student_id
-            if course_id:
+            if course_id and status[0] == 'Admin':
                 SQL += '''
                     "Course ID" = '%s',''' % course_id
-            if teacher_id:
+            if teacher_id and status[0] == 'Admin':
                 SQL += '''
                     "Teacher ID" = '%s',''' % teacher_id
-            if score:
+            if chosen_year and status[0] == 'Admin':
+                SQL += '''
+                    "Chosen Year" = '%s' ''' % chosen_year
+            if score and status[0] == 'Teacher':
                 SQL += '''
                 Score = '%s' ''' % score
 

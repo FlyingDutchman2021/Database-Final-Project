@@ -53,9 +53,10 @@ class TeacherView:
 
         # Show Button
         self.button_search.pack(side='left', padx=10)
-        self.button_update.pack(side='left', padx=10)
-        self.button_add.pack(side='left', padx=10)
-        self.button_delete.pack(side='left', padx=10)
+        if status[0] == 'Admin':
+            self.button_update.pack(side='left', padx=10)
+            self.button_add.pack(side='left', padx=10)
+            self.button_delete.pack(side='left', padx=10)
         self.button_frame.pack()
 
         # Show Entry
@@ -82,6 +83,8 @@ class TeacherView:
             cursor.close()
 
     def hide(self):
+        for widget in self.button_frame.winfo_children():
+            widget.pack_forget()
         self.entry_frame.pack_forget()
         self.button_frame.pack_forget()
 

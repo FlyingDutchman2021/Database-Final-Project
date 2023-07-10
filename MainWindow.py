@@ -70,7 +70,7 @@ class MainWindow:
 
         self.course_view = CourseView.CourseView(self.window, self.tree)
 
-        self.choose_view = ChooseView.ChooseView(self.window, self.tree)
+        self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.identity)
 
         # Create Login Window
         self.login_view = LoginView.LoginView(self.window, self.identity, self.show_main_window)
@@ -107,10 +107,10 @@ class MainWindow:
 
     def switch_course(self):
         self.current_window.hide()
-        self.current_window = CourseView.CourseView(self.window, self.tree)
+        self.current_window = self.course_view
         self.current_window.show(self.tree, status=self.identity)
 
     def switch_choose(self):
         self.current_window.hide()
-        self.current_window = ChooseView.ChooseView(self.window, self.tree)
+        self.current_window = self.choose_view
         self.current_window.show(self.tree, status=self.identity)
