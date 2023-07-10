@@ -7,21 +7,22 @@ class LoginView:
     def __init__(self, window, status, login_function):
         self.main_frame = tk.Frame(window)
 
-        self.label_user_name = tk.Label(self.main_frame, text='User Name')
-        self.label_user_name.pack()
+        self.label_user_name = tk.Label(self.main_frame, text='User Name', font='Arial 20')
+        self.label_user_name.pack(pady=8)
         self.user_name = tk.StringVar()
-        self.entry_user_name = tk.Entry(self.main_frame, textvariable=self.user_name)
-        self.entry_user_name.pack()
+        self.entry_user_name = tk.Entry(self.main_frame, textvariable=self.user_name, font='Arial 20')
+        self.entry_user_name.pack(pady=4)
 
-        self.label_password = tk.Label(self.main_frame, text='Password')
-        self.label_password.pack()
+        self.label_password = tk.Label(self.main_frame, text='Password', font='Arial 20')
+        self.label_password.pack(pady=8)
         self.password = tk.StringVar()
-        self.entry_password = tk.Entry(self.main_frame, textvariable=self.password)
-        self.entry_password.pack()
+        self.entry_password = tk.Entry(self.main_frame, textvariable=self.password, font='Arial 20', show='*')
+        self.entry_password.pack(pady=4)
 
         self.button_login = tk.Button(self.main_frame, text='Login',
-                                      command=lambda: self.login(status=status, login_function=login_function))
-        self.button_login.pack()
+                                      command=lambda: self.login(status=status, login_function=login_function),
+                                      font='Arial, 24', pady=8, padx=50)
+        self.button_login.pack(pady=10)
 
     def show(self):
         self.main_frame.pack()
