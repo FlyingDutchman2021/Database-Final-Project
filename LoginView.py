@@ -1,21 +1,24 @@
-import string
 import tkinter as tk
-from typing import Callable
 
 
 class LoginView:
     def __init__(self, window, status, login_function):
+        # Tracking
+        self.user_name = tk.StringVar()
+        self.password = tk.StringVar()
+
+        # Create Main Frame
         self.main_frame = tk.Frame(window)
 
         self.label_user_name = tk.Label(self.main_frame, text='User Name', font='Arial 20')
         self.label_user_name.pack(pady=8)
-        self.user_name = tk.StringVar()
+
         self.entry_user_name = tk.Entry(self.main_frame, textvariable=self.user_name, font='Arial 20')
         self.entry_user_name.pack(pady=4)
 
         self.label_password = tk.Label(self.main_frame, text='Password', font='Arial 20')
         self.label_password.pack(pady=8)
-        self.password = tk.StringVar()
+
         self.entry_password = tk.Entry(self.main_frame, textvariable=self.password, font='Arial 20', show='*')
         self.entry_password.pack(pady=4)
 
@@ -37,15 +40,15 @@ class LoginView:
             status.pop()
             status.append('S')
             login_function()
-        elif self.user_name.get() == 'Admin' and self.password.get() == 'admin2023':
+        elif self.user_name.get() == 'admin' and self.password.get() == 'admin':
             status.pop()
             status.append('Admin')
             login_function()
-        elif self.user_name.get() == 'Teacher' and self.password.get() == 'TA006':
+        elif self.user_name.get() == 'teacher' and self.password.get() == 'ta006':
             status.pop()
             status.append('Teacher')
             login_function()
         else:
             status.pop()
-            status.append('S')
+            status.append('Admin')
             login_function()
