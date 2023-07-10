@@ -32,7 +32,7 @@ class LoginView:
         self.password.set('')
 
     def login(self, status, login_function):
-        if self.user_name.get() == 'Student' and self.password.get() == '':
+        if self.user_name.get() == 'student' and self.password.get() == '':
             status.pop()
             status.append('S')
             login_function()

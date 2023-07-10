@@ -6,6 +6,7 @@ import TeacherView
 import CourseView
 import ChooseView
 import LoginView
+import StudentDetailView
 
 
 class MainWindow:
@@ -36,12 +37,15 @@ class MainWindow:
                                               command=lambda: self.switch_course())
         self.button_switch_choose = tk.Button(self.navigation_bar, text='Choose',
                                               command=lambda: self.switch_choose())
+        self.button_switch_student_course = tk.Button(self.navigation_bar, text='Student-Course',
+                                                      command=lambda: self.switch_student_detail())
 
         self.button_back.pack(side='left')
         self.button_switch_student.pack(side='left')
         self.button_switch_teacher.pack(side='left')
         self.button_switch_course.pack(side='left')
         self.button_switch_choose.pack(side='left')
+        self.button_switch_student_course.pack(side='left')
 
         # Create Table
 
@@ -71,6 +75,8 @@ class MainWindow:
         self.course_view = CourseView.CourseView(self.window, self.tree)
 
         self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.identity)
+
+        self.student_detail_view = StudentDetailView.StudentDetailView(self.window, self.tree)
 
         # Create Login Window
         self.login_view = LoginView.LoginView(self.window, self.identity, self.show_main_window)
@@ -114,3 +120,8 @@ class MainWindow:
         self.current_window.hide()
         self.current_window = self.choose_view
         self.current_window.show(self.tree, status=self.identity)
+
+    def switch_student_detail(self):
+        self.current_window.hide()
+        self.current_window = self.student_detail_view
+        self.current_window.show(self.tree)
