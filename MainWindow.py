@@ -8,6 +8,7 @@ import ChooseView
 import LoginView
 import StudentCourseView
 import StudentScoreView
+import ChooseDetailView
 
 
 class MainWindow:
@@ -15,7 +16,6 @@ class MainWindow:
         # Tracking attributes
         self.current_window = None
         self.identity = ['S']
-
 
         # Create main window
         self.window = tk.Tk()
@@ -38,6 +38,8 @@ class MainWindow:
                                               command=lambda: self.switch_course())
         self.button_switch_choose = tk.Button(self.navigation_bar, text='Choose',
                                               command=lambda: self.switch_choose())
+        self.button_switch_choose_detail = tk.Button(self.navigation_bar, text='Choose Detail',
+                                                     command=lambda: self.switch_choose_detail())
         self.button_switch_student_course = tk.Button(self.navigation_bar, text='Student-Course',
                                                       command=lambda: self.switch_student_detail())
         self.button_switch_student_score = tk.Button(self.navigation_bar, text='Student-Score',
@@ -48,6 +50,7 @@ class MainWindow:
         self.button_switch_teacher.pack(side='left')
         self.button_switch_course.pack(side='left')
         self.button_switch_choose.pack(side='left')
+        self.button_switch_choose_detail.pack(side='left')
         self.button_switch_student_course.pack(side='left')
         self.button_switch_student_score.pack(side='left')
 
@@ -79,6 +82,8 @@ class MainWindow:
         self.course_view = CourseView.CourseView(self.window, self.tree)
 
         self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.identity)
+
+        self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window, self.tree)
 
         self.student_detail_view = StudentCourseView.StudentCourseView(self.window, self.tree)
 
@@ -125,6 +130,11 @@ class MainWindow:
     def switch_choose(self):
         self.current_window.hide()
         self.current_window = self.choose_view
+        self.current_window.show(self.tree, status=self.identity)
+
+    def switch_choose_detail(self):
+        self.current_window.hide()
+        self.current_window = self.choose_detail_view
         self.current_window.show(self.tree, status=self.identity)
 
     def switch_student_detail(self):

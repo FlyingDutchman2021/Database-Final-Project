@@ -105,6 +105,7 @@ class ChooseView:
         student_id = self.student_id.get()
         course_id = self.course_id.get()
         teacher_id = self.teacher_id.get()
+        chosen_year = self.chosen_year.get()
         score = self.score.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
@@ -134,6 +135,15 @@ class ChooseView:
                 else:
                     SQL += '''
                     WHERE "Teacher ID" = '%s' ''' % teacher_id
+                    has_constraint = True
+            if chosen_year:
+                if has_constraint:
+                    SQL += '''
+                    AND "Chosen Year" = '%s' ''' % chosen_year
+                else:
+                    SQL += '''
+                    WHERE "Chosen Year" = '%s' ''' % chosen_year
+                    has_constraint = True
             if score:
                 if has_constraint:
                     SQL += '''
