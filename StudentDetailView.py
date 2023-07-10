@@ -60,17 +60,7 @@ class StudentDetailView:
 
 
         # Initial sheet data
-        with sqlite3.connect(database='Student Info.db') as db:
-            cursor = db.cursor()
-            SQL = '''SELECT * From Student'''
-            cursor.execute(SQL)
-            result = cursor.fetchall()
-            if len(tree.get_children()) > 0:
-                for item in tree.get_children():
-                    tree.delete(item)
-            for row in result:
-                tree.insert('', 'end', values=row)
-            cursor.close()
+        self.search(tree)
 
     def hide(self):
         for widget in self.button_frame.winfo_children():
@@ -85,13 +75,9 @@ class StudentDetailView:
     def search(self, tree):
         generated_id = self.id.get()
         name = self.name.get().title()
-        sex = self.sex.get().title()
-        age = self.age.get()
-        year = self.year.get()
-        s_class = self.s_class.get().upper()
+
 
         with sqlite3.connect(database='Student Info.db') as db:
-            has_constraint = False
             temp_cursor = db.cursor()
             SQL = '''SELECT S."Student ID", S.Name, S.Sex, S."Entrance Age", S."Entrance Year", S.Class,
                        C."Course ID", C.Name, Choose."Teacher ID", C.Credit, C.Grade, C."Canceled Year"
@@ -100,10 +86,10 @@ class StudentDetailView:
 
             if generated_id:
                 SQL += '''
-                AND "Student ID" = '%s' ''' % generated_id
-            else:
+                AND S."Student ID" = '%s' ''' % generated_id
+            elif name:
                 SQL += '''
-                WHERE "Name" = '%s' ''' % name
+                WHERE S."Name" = '%s' ''' % name
 
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
