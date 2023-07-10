@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
 import sqlite3
+import config
 
 
 class StudentView:
     def __init__(self, window):
         # Tracking Data
+        # 1
         self.id = tk.StringVar()
         self.name = tk.StringVar()
         self.sex = tk.StringVar()
@@ -13,6 +15,7 @@ class StudentView:
         self.year = tk.StringVar()
         self.s_class = tk.StringVar()
 
+        # 2
         self.mod_search_id = tk.StringVar()
         self.current_selected_id = '---'
         self.mod_name = tk.StringVar()
@@ -21,6 +24,7 @@ class StudentView:
         self.mod_year = tk.StringVar()
         self.mod_class = tk.StringVar()
 
+        # 3
         self.add_id = tk.StringVar()
         self.add_name = tk.StringVar()
         self.add_sex = tk.StringVar()
@@ -35,23 +39,28 @@ class StudentView:
         self.tree_frame = tk.Frame(self.main_frame)
         self.scrollbar = tk.Scrollbar(self.tree_frame)
         self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
-                                 show='headings',
-                                 height=10)
+                                 show='headings', height=10)
+
         style = ttk.Style()
         style.configure('Treeview.Heading', font=('Arial', 18))
         style.configure('Treeview', font=('Arial', 18))
         style.configure('Treeview', rowheight=28)
 
+
+
         # Configure column number
         self.tree["columns"] = (0, 1, 2, 3, 4, 5)
+
         # Set Tree heading Info
         heading_info = ['Student ID', 'Name', 'Sex', 'Entrance Age', 'Entrance Year', 'Class']
+
         for i in range(len(heading_info)):
             self.tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
         width_config = [160, 140, 90, 140, 140, 120]
         min_width_config = [115, 80, 80, 120, 120, 80]
+
         for i in range(len(width_config)):
             self.tree.column('%d' % i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
@@ -66,6 +75,7 @@ class StudentView:
         self.entry_frame.rowconfigure(0, weight=1, pad=0)
         self.entry_frame.rowconfigure(1, weight=1, pad=0)
 
+        # 1
         self.label_id = tk.Label(self.entry_frame, text='Student ID', font='Arial, 16')
         self.label_name = tk.Label(self.entry_frame, text='Name', font='Arial, 16')
         self.label_sex = tk.Label(self.entry_frame, text='Sex', font='Arial, 16')
@@ -73,6 +83,8 @@ class StudentView:
         self.label_year = tk.Label(self.entry_frame, text='Entrance Year', font='Arial, 16')
         self.label_class = tk.Label(self.entry_frame, text='Class', font='Arial, 16')
 
+
+        # 2
         self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
                                  font='Arial, 20', width=14)
         self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
@@ -86,9 +98,12 @@ class StudentView:
         self.entry_Class = tk.Entry(self.entry_frame, textvariable=self.s_class,
                                     font='Arial, 20', width=10)
 
+        # 3
         self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font='Arial, 18',
                                        command=lambda: self.search())
 
+
+        # 1
         self.label_id.grid(row=0, column=0)
         self.label_name.grid(row=0, column=1)
         self.label_sex.grid(row=0, column=2)
@@ -96,6 +111,7 @@ class StudentView:
         self.label_year.grid(row=0, column=4)
         self.label_class.grid(row=0, column=5)
 
+        # 2
         self.entry_ID.grid(row=1, column=0)
         self.entry_Name.grid(row=1, column=1)
         self.entry_Sex.grid(row=1, column=2)
@@ -103,6 +119,7 @@ class StudentView:
         self.entry_Year.grid(row=1, column=4)
         self.entry_Class.grid(row=1, column=5)
 
+        # 3
         self.button_search.grid(row=1, column=6)
 
         # Create Modification Frame
@@ -156,8 +173,8 @@ class StudentView:
         self.label_mod_age_hint.grid(row=2, column=3)
         self.label_mod_year_hint.grid(row=2, column=4)
         self.label_mod_class_hint.grid(row=2, column=5)
-        self.label_mod_search_id.grid(row=3, column=0)
         # 4
+        self.label_mod_search_id.grid(row=3, column=0)
         self.entry_mod_name.grid(row=3, column=1)
         self.entry_mod_sex.grid(row=3, column=2)
         self.entry_mod_age.grid(row=3, column=3)
@@ -217,8 +234,6 @@ class StudentView:
         self.button_add_add.grid(row=2, column=0)
         self.button_add_back.grid(row=2, column=1)
 
-
-
         # Pack Each Frame nto Main Frame
         self.entry_frame.pack(pady=2)
         self.tree_frame.pack()
@@ -239,7 +254,7 @@ class StudentView:
         self.add_frame.pack_forget()
 
     def search(self):
-        generated_id = self.id.get()
+        search_id = self.id.get()
         name = self.name.get().title()
         sex = self.sex.get().title()
         age = self.age.get()
@@ -250,14 +265,11 @@ class StudentView:
             has_constraint = False
             temp_cursor = db.cursor()
             SQL = '''SELECT * From Student '''
-            if generated_id:
-                if not has_constraint:
-                    SQL += '''
-                    WHERE "Student ID" = '%s' ''' % generated_id
-                    has_constraint = True
-                else:
-                    SQL += '''
-                    AND "Student ID" = '%s' ''' % generated_id
+            if search_id:
+                SQL += '''
+                WHERE "Student ID" = '%s' ''' % search_id
+                has_constraint = True
+
             if name:
                 if has_constraint:
                     SQL += '''
@@ -301,7 +313,6 @@ class StudentView:
                     SQL += '''
                     WHERE "Class" = '%s' ''' % s_class
 
-            print(SQL)
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
@@ -423,3 +434,6 @@ class StudentView:
     def add_back(self):
         self.add_frame.pack_forget()
         self.mod_frame.pack()
+
+    def reset_all(self):
+        pass
