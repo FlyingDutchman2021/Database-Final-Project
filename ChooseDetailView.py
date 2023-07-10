@@ -50,15 +50,16 @@ class ChooseDetailView:
 
     def show(self, tree, status):
         # Configure column number
-        tree["columns"] = (0, 1, 2, 3, 4)
+        tree["columns"] = (0, 1, 2, 3, 4, 5, 6, 7, 8)
         # Set Tree heading Info
-        heading_info = ['Student ID', 'Course ID', 'Teacher ID', 'Chosen Year', 'Score']
+        heading_info = ['Student ID', 'Student Name', 'Course ID', 'Course Name', 'Teacher ID', 'Teacher Name',
+                        'Chosen Year', 'Score', 'Credit']
         for i in range(len(heading_info)):
             tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140]
-        min_width_config = [115, 80, 80, 120, 120]
+        width_config = [160, 140, 90, 140, 140, 160, 140, 90, 140]
+        min_width_config = [115, 80, 80, 120, 120, 115, 80, 80, 120]
         for i in range(len(width_config)):
             tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
@@ -97,21 +98,21 @@ class ChooseDetailView:
 
     def search(self, tree):
         student_id = self.student_id.get()
-        student_name = self.student_name.get()
+        student_name = self.student_name.get().title()
         course_id = self.course_id.get()
-        course_name = self.course_name.get()
+        course_name = self.course_name.get().title()
         teacher_id = self.teacher_id.get()
-        teacher_name = self.teacher_name.get()
+        teacher_name = self.teacher_name.get().title()
         chosen_year = self.chosen_year.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
             has_constraint = False
             temp_cursor = db.cursor()
-            SQL = '''SELECT C."Course ID", C.Name, S."Student ID", S."Name",
-                      Choose."Teacher ID", T.Name, "Chosen Year", Score, C.Credit, C.Grade
+            SQL = '''SELECT S."Student ID", S."Name", C."Course ID", C.Name,
+                      Choose."Teacher ID", T.Name, "Chosen Year", Score, C.Credit
                     From Choose INNER JOIN Course C ON Choose."Course ID" = C."Course ID"
                     INNER JOIN Student S on S."Student ID" = Choose."Student ID"
-                    INNER JOIN Teacher T on T."Teacher ID" = C."Teacher ID";'''
+                    INNER JOIN Teacher T on T."Teacher ID" = C."Teacher ID"'''
             if student_id:
                 if not has_constraint:
                     SQL += '''
@@ -166,7 +167,7 @@ class ChooseDetailView:
                 else:
                     SQL += '''
                     WHERE "Chosen Year" = '%s' ''' % chosen_year
-
+            print(SQL)
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
