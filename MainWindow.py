@@ -6,7 +6,7 @@ import TeacherView
 import CourseView
 import ChooseView
 import LoginView
-import StudentDetailView
+import StudentCourseView
 
 
 class MainWindow:
@@ -76,7 +76,7 @@ class MainWindow:
 
         self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.identity)
 
-        self.student_detail_view = StudentDetailView.StudentDetailView(self.window, self.tree)
+        self.student_detail_view = StudentCourseView.StudentDetailView(self.window, self.tree)
 
         # Create Login Window
         self.login_view = LoginView.LoginView(self.window, self.identity, self.show_main_window)
