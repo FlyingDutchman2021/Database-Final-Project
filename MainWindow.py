@@ -88,7 +88,7 @@ class MainWindow:
         # self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.status)
 
 
-        # self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window, self.tree)
+        self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window)
 
 
 
@@ -139,16 +139,22 @@ class MainWindow:
         self.login_view.show()
 
     def switch_student(self):
+        if self.current_window == self.student_view:
+            return
         self.current_window.hide()
         self.current_window = self.student_view
         self.current_window.show()
 
     def switch_teacher(self):
+        if self.current_window == self.teacher_view:
+            return
         self.current_window.hide()
         self.current_window = self.teacher_view
         self.current_window.show()
 
     def switch_course(self):
+        if self.current_window == self.course_view:
+            return
         self.current_window.hide()
         self.current_window = self.course_view
         self.current_window.show()
@@ -159,6 +165,8 @@ class MainWindow:
         self.current_window.show(self.tree, status=self.status)
 
     def switch_choose_detail(self):
+        if self.current_window == self.choose_detail_view:
+            return
         self.current_window.hide()
         self.current_window = self.choose_detail_view
         self.current_window.show(self.tree, status=self.status)
