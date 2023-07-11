@@ -42,3 +42,13 @@ C_TREE_MIN_WIDTH_CONFIG = [115, 80, 80, 120, 120, 80]
 
 C_ENTRY_WIDTH = [14, 10, 10, 12, 12, 10]
 
+# Choose Detail Custom
+CD_TREE_COLUMN = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+CD_TREE_HEADING_INFO = ['Student ID', 'Student Name', 'Course ID', 'Course Name', 'Teacher ID', 'Teacher Name',
+                        'Chosen Year', 'Score', 'Credit']
+CD_TREE_WIDTH_CONFIG = [160, 140, 90, 140, 140, 160, 140, 90, 140]
+CD_TREE_MIN_WIDTH_CONFIG = [115, 80, 80, 120, 120, 115, 80, 80, 120]
+
+CD_ENTRY_WIDTH = [14, 10, 10, 12, 12, 10]
+CD_MOD_ADD_ENTRY_WIDTH = [14, 10, 10, 12, 12]
+
