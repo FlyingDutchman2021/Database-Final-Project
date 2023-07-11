@@ -61,8 +61,8 @@ class MainWindow:
         #                                              command=lambda: self.switch_student_score())
 
 
-        # self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',
-        #                                    command=lambda: self.switch_AVG())
+        self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',
+                                           command=lambda: self.switch_AVG())
 
 
         self.button_back.pack(side='left')
@@ -73,7 +73,7 @@ class MainWindow:
         self.button_switch_choose_detail.pack(side='left')
         # self.button_switch_student_course.pack(side='left')
         # self.button_switch_student_score.pack(side='left')
-        # self.button_switch_AVG.pack(side='left')
+        self.button_switch_AVG.pack(side='left')
 
 
 
@@ -99,7 +99,7 @@ class MainWindow:
         # self.student_score_view = StudentScoreView.StudentScoreView(self.window, self.tree)
 
 
-        # self.AVG_view = AVGView.AVGView(self.window, self.tree)
+        self.AVG_view = AVGView.AVGView(self.window)
 
 
 
@@ -138,6 +138,7 @@ class MainWindow:
         self.teacher_view.logout()
         self.course_view.logout()
         self.choose_detail_view.logout()
+        self.AVG_view.logout()
 
         # Show Login
         self.login_view.show()
@@ -188,7 +189,9 @@ class MainWindow:
 
 
 
-    # def switch_AVG(self):
-    #     self.current_window.hide()
-    #     self.current_window = self.AVG_view
-    #     self.current_window.show(self.tree)
+    def switch_AVG(self):
+        if self.current_window == self.AVG_view:
+            return
+        self.current_window.hide()
+        self.current_window = self.AVG_view
+        self.current_window.show()

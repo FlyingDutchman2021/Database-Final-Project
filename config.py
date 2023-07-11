@@ -53,3 +53,12 @@ CD_ENTRY_WIDTH = [14, 10, 10, 12, 12, 10]
 
 CD_MOD_ADD_ENTRY_WIDTH = [14, 10, 10, 12, 12, 12]
 
+# AVG Custom
+
+A_TREE_COLUMN = (0, 1, 2, 3)
+A_TREE_HEADING_INFO = ['Student ID', 'Course ID', 'Class', 'Average Score']
+A_TREE_WIDTH_CONFIG = [160, 140, 90, 140]
+A_TREE_MIN_WIDTH_CONFIG = [115, 80, 80, 120]
+
+
+
