@@ -1,15 +1,10 @@
 import tkinter as tk
 from tkinter import ttk
 
+import LoginView
 import StudentView
 import TeacherView
 import CourseView
-import ChooseView
-import LoginView
-
-import StudentCourseView
-import StudentScoreView
-
 import ChooseDetailView
 import AVGView
 
@@ -51,16 +46,8 @@ class MainWindow:
                                                command=lambda: self.switch_teacher())
         self.button_switch_course = tk.Button(self.navigation_bar, text='Course',
                                               command=lambda: self.switch_course())
-        # self.button_switch_choose = tk.Button(self.navigation_bar, text='Choose',
-        #                                       command=lambda: self.switch_choose())
         self.button_switch_choose_detail = tk.Button(self.navigation_bar, text='Choose Detail',
                                                      command=lambda: self.switch_choose_detail())
-        # self.button_switch_student_course = tk.Button(self.navigation_bar, text='Student-Course',
-        #                                               command=lambda: self.switch_student_detail())
-        # self.button_switch_student_score = tk.Button(self.navigation_bar, text='Student-Score',
-        #                                              command=lambda: self.switch_student_score())
-
-
         self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',
                                            command=lambda: self.switch_AVG())
 
@@ -69,41 +56,15 @@ class MainWindow:
         self.button_switch_student.pack(side='left')
         self.button_switch_teacher.pack(side='left')
         self.button_switch_course.pack(side='left')
-        # self.button_switch_choose.pack(side='left')
         self.button_switch_choose_detail.pack(side='left')
-        # self.button_switch_student_course.pack(side='left')
-        # self.button_switch_student_score.pack(side='left')
         self.button_switch_AVG.pack(side='left')
-
-
-
-
-
 
         # Create Student Info Manager Box
         self.student_view = StudentView.StudentView(self.window)
-
         self.teacher_view = TeacherView.TeacherView(self.window)
-
         self.course_view = CourseView.CourseView(self.window)
-
-        # self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.status)
-
-
         self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window)
-
-
-
-        # self.student_detail_view = StudentCourseView.StudentCourseView(self.window, self.tree)
-
-        # self.student_score_view = StudentScoreView.StudentScoreView(self.window, self.tree)
-
-
         self.AVG_view = AVGView.AVGView(self.window)
-
-
-
-
 
 
 
@@ -117,12 +78,11 @@ class MainWindow:
         self.login_view.hide()
         self.navigation_bar.pack(pady=25)
 
-        # Login all window TODO FILL
+        # Login all window
         self.student_view.login(self.status)
         self.teacher_view.login(self.status)
         self.course_view.login(self.status)
         self.choose_detail_view.login(self.status)
-
 
         # Show default page
         self.current_window = self.student_view
@@ -133,7 +93,7 @@ class MainWindow:
         self.current_window.hide()
         self.navigation_bar.pack_forget()
 
-        # Logout all window TODO FILL
+        # Logout all window
         self.student_view.logout()
         self.teacher_view.logout()
         self.course_view.logout()
@@ -164,30 +124,12 @@ class MainWindow:
         self.current_window = self.course_view
         self.current_window.show()
 
-    #
-    # def switch_choose(self):
-    #     self.current_window.hide()
-    #     self.current_window = self.choose_view
-    #     self.current_window.show()
-
     def switch_choose_detail(self):
         if self.current_window == self.choose_detail_view:
             return
         self.current_window.hide()
         self.current_window = self.choose_detail_view
         self.current_window.show()
-    #
-    # def switch_student_detail(self):
-    #     self.current_window.hide()
-    #     self.current_window = self.student_detail_view
-    #     self.current_window.show(self.tree)
-    #
-    # def switch_student_score(self):
-    #     self.current_window.hide()
-    #     self.current_window = self.student_score_view
-    #     self.current_window.show(self.tree)
-
-
 
     def switch_AVG(self):
         if self.current_window == self.AVG_view:

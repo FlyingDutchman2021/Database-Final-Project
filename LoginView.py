@@ -36,11 +36,7 @@ class LoginView:
         self.password.set('')
 
     def login(self, status, login_function):
-        if self.user_name.get() == 'student' and self.password.get() == '':
-            status.pop()
-            status.append('S')
-            login_function()
-        elif self.user_name.get() == 'admin' and self.password.get() == 'admin':
+        if self.user_name.get() == 'admin' and self.password.get() == 'admin':
             status.pop()
             status.append('Admin')
             login_function()
@@ -50,5 +46,5 @@ class LoginView:
             login_function()
         else:
             status.pop()
-            status.append('Admin')
+            status.append('Student')
             login_function()
