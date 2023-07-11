@@ -360,15 +360,17 @@ VALUES ('''
 '''
                 if name:
                     SQL += '''SET "Name" = '%s',
-'''
+''' % name
                 else:
                     SQL += '''SET "Name" = null,
 '''
 
                 if course_id:
-                    SQL += '''"Course" = '%s' ''' % course_id
+                    SQL += '''"Course" = '%s'
+''' % course_id
                 else:
-                    SQL += '''"Course" = null'''
+                    SQL += '''"Course" = null
+'''
 
                 SQL += '''WHERE "Teacher ID" = '%s' ''' % search_id
 
