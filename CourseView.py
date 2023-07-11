@@ -18,9 +18,10 @@ class CourseView:
 
         # 2
         self.mod_search_id = tk.StringVar()
+        self.mod_search_t_id = tk.StringVar()
         self.current_selected_id = '---'
+        self.current_selected_t_id = '---'
         self.mod_name = tk.StringVar()
-        self.mod_teacher_id = tk.StringVar()
         self.mod_credit = tk.StringVar()
         self.mod_grade = tk.StringVar()
         self.mod_canceled_year = tk.StringVar()
@@ -139,6 +140,9 @@ class CourseView:
         self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Course ID', font=config.LABEL_FONT)
         self.entry_mod_search_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_id,
                                             font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+        self.label_mod_search_t_id_hint = tk.Label(self.mod_frame, text='Teacher ID', font=config.LABEL_FONT)
+        self.entry_mod_search_t_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_t_id,
+                                              font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
         # 2
         self.button_id_search = tk.Button(self.mod_frame, text='Search', font=config.BUTTON_MEDIUM,
                                           command=lambda: self.id_search(), pady=2, padx=10)
@@ -153,8 +157,7 @@ class CourseView:
         self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font=config.ENTRY_FONT)
         self.entry_mod_name = tk.Entry(self.mod_frame, textvariable=self.mod_name,
                                        font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
-        self.entry_mod_teacher_id = tk.Entry(self.mod_frame, textvariable=self.mod_teacher_id,
-                                             font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+        self.label_mod_search_t_id = tk.Label(self.mod_frame, text='---', font=config.ENTRY_FONT)
         self.entry_mod_credit = tk.Entry(self.mod_frame, textvariable=self.mod_credit,
                                          font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
         self.entry_mod_grade = tk.Entry(self.mod_frame, textvariable=self.mod_grade,
@@ -164,7 +167,6 @@ class CourseView:
 
         # 4
         self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font=config.LABEL_FONT)
-        self.label_mod_teacher_id_hint = tk.Label(self.mod_frame, text='Teacher ID', font=config.LABEL_FONT)
         self.label_mod_credit_hint = tk.Label(self.mod_frame, text='Credit', font=config.LABEL_FONT)
         self.label_mod_grade_hint = tk.Label(self.mod_frame, text='Grade', font=config.LABEL_FONT)
         self.label_mod_canceled_year_hint = tk.Label(self.mod_frame, text='Canceled Year', font=config.LABEL_FONT)
@@ -175,26 +177,27 @@ class CourseView:
         # 1
         self.label_mod_search_id_hint.grid(row=0, column=0)
         self.entry_mod_search_id.grid(row=1, column=0)
+        self.label_mod_search_t_id_hint.grid(row=0, column=1)
+        self.entry_mod_search_t_id.grid(row=1, column=1)
         # 2
-        self.button_id_search.grid(row=1, column=1, pady=13)
-        self.button_update.grid(row=1, column=2)
-        self.button_add.grid(row=1, column=3)
-        self.button_delete.grid(row=1, column=4)
+        self.button_id_search.grid(row=1, column=2, pady=13)
+        self.button_update.grid(row=1, column=3)
+        self.button_add.grid(row=1, column=4)
+        self.button_delete.grid(row=1, column=5)
         # 3
         self.label_mod_name_hint.grid(row=2, column=1)
-        self.label_mod_teacher_id_hint.grid(row=2, column=2)
         self.label_mod_credit_hint.grid(row=2, column=3)
         self.label_mod_grade_hint.grid(row=2, column=4)
         self.label_mod_canceled_year_hint.grid(row=2, column=5)
         # 4
         self.label_mod_search_id.grid(row=3, column=0)
         self.entry_mod_name.grid(row=3, column=1)
-        self.entry_mod_teacher_id.grid(row=3, column=2)
+        self.label_mod_search_t_id.grid(row=3, column=2)
         self.entry_mod_credit.grid(row=3, column=3)
         self.entry_mod_grade.grid(row=3, column=4)
         self.entry_mod_canceled_year.grid(row=3, column=5)
         # 5
-        self.label_update_succeed_status.grid(row=1, column=5)
+        self.label_update_succeed_status.grid(row=2, column=4)
 
 
 
@@ -273,7 +276,6 @@ class CourseView:
         # Trace
         # 1
         self.mod_name.trace_add("write", self.reset_update_success_status)
-        self.mod_teacher_id.trace_add("write", self.reset_update_success_status)
         self.mod_credit.trace_add("write", self.reset_update_success_status)
         self.mod_grade.trace_add("write", self.reset_update_success_status)
         self.mod_canceled_year.trace_add("write", self.reset_update_success_status)
@@ -288,6 +290,7 @@ class CourseView:
     # Show/Hide & Login/Logout
     def show(self):
         self.main_frame.pack()
+        self.search()
 
     def hide(self):
         self.main_frame.pack_forget()
@@ -373,10 +376,13 @@ WHERE "Canceled Year" LIKE ''' + "'%" + '''%s''' % canceled_year + "'"
 
     def id_search(self):
         search_id = self.mod_search_id.get()
+        search_t_id = self.mod_search_t_id.get()
+        if search_id == '' or search_t_id == '':
+            return
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
             SQL = '''SELECT * From Course 
-WHERE "Course ID" = '%s' ''' % search_id
+WHERE "Course ID" = %s AND "Teacher ID" = %s ''' % (search_id, search_t_id)
 
             print(SQL)
             temp_cursor.execute(SQL)
@@ -386,10 +392,11 @@ WHERE "Course ID" = '%s' ''' % search_id
                 self.current_selected_id = temp_result[0][0]
                 self.label_mod_search_id.configure(text=temp_result[0][0])
                 self.mod_name.set(temp_result[0][1])
-                self.mod_teacher_id.set(temp_result[0][2])
+                self.current_selected_t_id = temp_result[0][2]
+                self.label_mod_search_t_id.config(text=temp_result[0][2])
                 self.mod_credit.set(temp_result[0][3])
                 self.mod_grade.set(temp_result[0][4])
-                if temp_result[0][5] == 'None':
+                if temp_result[0][5] == None:
                     self.mod_canceled_year.set('')
                 else:
                     self.mod_canceled_year.set(temp_result[0][5])
@@ -408,6 +415,9 @@ WHERE "Course ID" = '%s' ''' % search_id
         try:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
+                SQL = '''PRAGMA foreign_keys = ON;'''
+                temp_cursor.execute(SQL)
+
                 SQL = '''INSERT INTO Course 
 VALUES ('''
                 if search_id:
@@ -453,11 +463,12 @@ VALUES ('''
 
     def delete(self):
         search_id = self.current_selected_id
-        if search_id == '---':
+        search_t_id = self.current_selected_t_id
+        if search_id == '---' or search_t_id == '---':
             return
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''DELETE From Course WHERE "Course ID" = '%s' ''' % search_id
+            SQL = '''DELETE From Course WHERE "Course ID" = %s AND "Teacher ID" = %s ''' % (search_id, search_t_id)
             print(SQL)
             temp_cursor.execute(SQL)
             temp_cursor.close()
@@ -465,11 +476,12 @@ VALUES ('''
         self.search()
 
     def update(self):
-        if self.current_selected_id == '---':
-            return
         search_id = self.current_selected_id
+        search_t_id = self.current_selected_t_id
+        if search_id == '---' or search_t_id == '---':
+            return
+
         name = self.mod_name.get().title()
-        teacher_id = self.mod_teacher_id.get()
         credit = self.mod_credit.get()
         grade = self.mod_grade.get()
         canceled_year = self.mod_canceled_year.get()
@@ -478,7 +490,11 @@ VALUES ('''
         try:
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
-                SQL = '''UPDATE Course'''
+                SQL = '''PRAGMA foreign_keys = ON;'''
+                temp_cursor.execute(SQL)
+
+                SQL = '''UPDATE Course
+'''
                 if name:
                     SQL += '''SET "Name" = '%s',
 ''' % name
@@ -486,12 +502,6 @@ VALUES ('''
                     SQL += '''SET "Name" = null,
 '''
 
-                if teacher_id:
-                    SQL += '''"Teacher ID" = '%s',
-''' % teacher_id
-                else:
-                    SQL += '''"Teacher ID" = null,
-'''
                 if credit:
                     SQL += '''"Credit" = '%s',
 ''' % credit
@@ -510,7 +520,7 @@ VALUES ('''
                 else:
                     SQL += '''"Canceled Year" = '%s'
 ''' % canceled_year
-                SQL += '''WHERE "Course ID" = '%s' ''' % search_id
+                SQL += '''WHERE "Course ID" = %s AND "Teacher ID" = %s ''' % (search_id, search_t_id)
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -523,12 +533,13 @@ VALUES ('''
             self.label_update_succeed_status.config(text='')
             self.search()
 
-    def set_id_search_result(self, _id='---', _name='', _teacher_id='',
+    def set_id_search_result(self, _id='---', _name='', _teacher_id='---',
                              _credit='', _grade='', _canceled_year=''):
         self.current_selected_id = _id
         self.label_mod_search_id.configure(text=_id)
         self.mod_name.set(_name)
-        self.mod_teacher_id.set(_teacher_id)
+        self.current_selected_t_id = _teacher_id
+        self.label_mod_search_t_id.config(text=_teacher_id)
         self.mod_credit.set(_credit)
         self.mod_grade.set(_grade)
         self.mod_canceled_year.set(_canceled_year)
@@ -568,6 +579,7 @@ VALUES ('''
         self.canceled_year.set('')
 
         self.mod_search_id.set('')
+        self.mod_search_t_id.set('')
         self.set_id_search_result()
 
         self.add_id.set('')

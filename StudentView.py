@@ -263,6 +263,7 @@ class StudentView:
     # Show/Hide & Login/Logout
     def show(self):
         self.main_frame.pack()
+        self.search()
 
     def hide(self):
         self.main_frame.pack_forget()
