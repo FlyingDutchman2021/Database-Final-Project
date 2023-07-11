@@ -381,14 +381,36 @@ WHERE "Student ID" = '%s' ''' % search_id
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''INSERT INTO Student 
-VALUES (
-        '%s',
-        '%s',
-        '%s',
-        '%s',
-        '%s',
-        '%s'
-       )''' % (search_id, name, sex, age, year, s_class)
+VALUES ('''
+                if search_id:
+                    SQL += "'%s', " % search_id
+                else:
+                    SQL += "null, "
+
+                if name:
+                    SQL += "'%s', " % name
+                else:
+                    SQL += "null, "
+
+                if sex:
+                    SQL += "'%s', " % sex
+                else:
+                    SQL += "null, "
+
+                if age:
+                    SQL += "'%s', " % age
+                else:
+                    SQL += "null, "
+
+                if year:
+                    SQL += "'%s', " % year
+                else:
+                    SQL += "null, "
+
+                if s_class:
+                    SQL += "'%s')" % s_class
+                else:
+                    SQL += "null)"
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -398,6 +420,7 @@ VALUES (
             succeed = False
 
         if succeed:
+            self.label_add_success_status.config(text='')
             self.search()
 
     def delete(self):
@@ -428,12 +451,42 @@ VALUES (
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''UPDATE Student 
-SET "Name" = '%s',
-    "Sex" = '%s',
-    "Entrance Age" = '%s',
-    "Entrance Year" = '%s',
-    "Class" = '%s'
-WHERE "Student ID" = '%s' ''' % (name, sex, age, year, s_class, search_id)
+'''
+                if name:
+                    SQL += '''SET "Name" = '%s',
+''' % name
+                else:
+                    SQL += '''SET "Name" = null,
+'''
+
+                if sex:
+                    SQL += '''    "Sex" = '%s',
+''' % sex
+                else:
+                    SQL += '''    "Sex" = null,
+'''
+                if age:
+                    SQL += '''    "Entrance Age" = '%s',
+''' % age
+                else:
+                    SQL += '''    "Entrance Age" = null,
+'''
+
+                if year:
+                    SQL += '''    "Entrance Year" = '%s',
+''' % year
+                else:
+                    SQL += '''    "Entrance Year" = null,
+'''
+
+                if s_class:
+                    SQL += '''    "Class" = '%s'
+''' % s_class
+                else:
+                    SQL += '''    "Class" = null
+'''
+
+                SQL += '''WHERE "Student ID" = '%s' ''' % search_id
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -443,6 +496,7 @@ WHERE "Student ID" = '%s' ''' % (name, sex, age, year, s_class, search_id)
             succeed = False
 
         if succeed:
+            self.label_update_succeed_status.config(text='')
             self.search()
 
     def set_id_search_result(self, _id='---', _name='', _sex='',

@@ -305,11 +305,21 @@ WHERE "Teacher ID" = '%s' ''' % search_id
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''INSERT INTO Teacher 
-VALUES (
-        '%s',
-        '%s',
-        '%s'
-       )''' % (search_id, name, course_id)
+VALUES ('''
+                if search_id:
+                    SQL += "'%s', " % search_id
+                else:
+                    SQL += "null, "
+
+                if name:
+                    SQL += "'%s', " % name
+                else:
+                    SQL += "null, "
+
+                if course_id:
+                    SQL += "'%s')" % course_id
+                else:
+                    SQL += "null)"
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -319,6 +329,7 @@ VALUES (
             succeed = False
 
         if succeed:
+            self.label_add_success_status.config(text='')
             self.search()
 
     def delete(self):
@@ -346,9 +357,20 @@ VALUES (
             with sqlite3.connect(database='Student Info.db') as db:
                 temp_cursor = db.cursor()
                 SQL = '''UPDATE Teacher 
-SET "Name" = '%s',
-    "Course" = '%s' 
-WHERE "Teacher ID" = '%s' ''' % (name, course_id, search_id)
+'''
+                if name:
+                    SQL += '''SET "Name" = '%s',
+'''
+                else:
+                    SQL += '''SET "Name" = null,
+'''
+
+                if course_id:
+                    SQL += '''"Course" = '%s' ''' % course_id
+                else:
+                    SQL += '''"Course" = null'''
+
+                SQL += '''WHERE "Teacher ID" = '%s' ''' % search_id
 
                 print(SQL)
                 temp_cursor.execute(SQL)
@@ -358,6 +380,7 @@ WHERE "Teacher ID" = '%s' ''' % (name, course_id, search_id)
             succeed = False
 
         if succeed:
+            self.label_update_succeed_status.config(text='')
             self.search()
 
     def set_id_search_result(self, _id='---', _name='', _course_id=''):

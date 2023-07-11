@@ -34,3 +34,11 @@ T_TREE_MIN_WIDTH_CONFIG = [115, 80, 80]
 
 T_ENTRY_WIDTH = [14, 10, 10]
 
+# Course Custom
+C_TREE_COLUMN = (0, 1, 2, 3, 4, 5)
+C_TREE_HEADING_INFO = ['Course ID', 'Name', 'Teacher ID', 'Credit', 'Grade', 'Canceled Year']
+C_TREE_WIDTH_CONFIG = [160, 140, 90, 140, 140, 120]
+C_TREE_MIN_WIDTH_CONFIG = [115, 80, 80, 120, 120, 80]
+
+C_ENTRY_WIDTH = [14, 10, 10, 12, 12, 10]
+

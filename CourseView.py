@@ -1,84 +1,121 @@
 import tkinter as tk
+from tkinter import ttk
 import sqlite3
+import config
 
 
 class CourseView:
-    def __init__(self, window, tree):
-
-        # Create Button
-        self.button_frame = tk.Frame(window)
-        self.button_search = tk.Button(self.button_frame, text='Search', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.search(tree=tree))
-        self.button_update = tk.Button(self.button_frame, text='Update', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.update(tree=tree))
-        self.button_add = tk.Button(self.button_frame, text='+', padx=50, pady=15, font='Arial, 28',
-                                    command=lambda: self.insert(tree))
-        self.button_delete = tk.Button(self.button_frame, text='-', padx=50, pady=15, font='Arial, 28',
-                                       command=lambda: self.delete(tree))
-        # Create Entry Frame
-        self.entry_frame = tk.Frame(window)
-        self.entry_frame.columnconfigure("all", weight=1)
-        self.entry_frame.rowconfigure(0, weight=1, pad=0)
-        self.entry_frame.rowconfigure(1, weight=1, pad=0)
-
-        # Create Label
-        self.label_id = tk.Label(self.entry_frame, text='Course ID')
-        self.label_name = tk.Label(self.entry_frame, text='Name')
-        self.label_teacher_id = tk.Label(self.entry_frame, text='Teacher ID')
-        self.label_credit = tk.Label(self.entry_frame, text='Credit')
-        self.label_grade = tk.Label(self.entry_frame, text='Grade')
-        self.label_canceled_year = tk.Label(self.entry_frame, text='Canceled Year')
-
-        # Create Entry
+    def __init__(self, window):
+        # Tracking Data
+        self.add_expanded = False
+        # 1
         self.id = tk.StringVar()
-        self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
-                                 font='Arial, 20', width=14)
         self.name = tk.StringVar()
-        self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
-                                   font='Arial, 20', width=10)
         self.teacher_id = tk.StringVar()
-        self.entry_Teacher_ID = tk.Entry(self.entry_frame, textvariable=self.teacher_id,
-                                         font='Arial, 20', width=10)
         self.credit = tk.StringVar()
-        self.entry_Credit = tk.Entry(self.entry_frame, textvariable=self.credit,
-                                     font='Arial, 20', width=12)
         self.grade = tk.StringVar()
-        self.entry_Grade = tk.Entry(self.entry_frame, textvariable=self.grade,
-                                    font='Arial, 20', width=12)
         self.canceled_year = tk.StringVar()
-        self.entry_Canceled_Year = tk.Entry(self.entry_frame, textvariable=self.canceled_year,
-                                            font='Arial, 20', width=10)
 
-    def show(self, tree, status):
+        # 2
+        self.mod_search_id = tk.StringVar()
+        self.current_selected_id = '---'
+        self.mod_name = tk.StringVar()
+        self.mod_teacher_id = tk.StringVar()
+        self.mod_credit = tk.StringVar()
+        self.mod_grade = tk.StringVar()
+        self.mod_canceled_year = tk.StringVar()
+
+        # 3
+        self.add_id = tk.StringVar()
+        self.add_name = tk.StringVar()
+        self.add_teacher_id = tk.StringVar()
+        self.add_credit = tk.StringVar()
+        self.add_grade = tk.StringVar()
+        self.add_canceled_year = tk.StringVar()
+
+
+
+        # Create Display Frame
+        self.main_frame = tk.Frame(window)
+
+        # Create Table Frame
+        self.tree_frame = tk.Frame(self.main_frame)
+        self.scrollbar = tk.Scrollbar(self.tree_frame)
+        self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
+                                 show='headings', height=config.TABLE_ROW_DISPLAY_NUMBER)
+
+        style = ttk.Style()
+        style.configure('Treeview.Heading', font=config.TABLE_HEADING_FONT)
+        style.configure('Treeview', font=config.TABLE_ROW_FONT)
+        style.configure('Treeview', rowheight=config.TABLE_ROW_HEIGHT)
+
         # Configure column number
-        tree["columns"] = (0, 1, 2, 3, 4, 5)
+        self.tree["columns"] = config.C_TREE_COLUMN
+
         # Set Tree heading Info
-        heading_info = ['Course ID', 'Name', 'Teacher ID', 'Credit', 'Grade', 'Canceled Year']
+        heading_info = config.C_TREE_HEADING_INFO
+
         for i in range(len(heading_info)):
-            tree.heading(i, text=heading_info[i])
+            self.tree.heading(i, text=heading_info[i])
 
         # Configure Tree Column Style
-        width_config = [160, 140, 90, 140, 140, 120]
-        min_width_config = [115, 80, 80, 120, 120, 80]
+        width_config = config.C_TREE_WIDTH_CONFIG
+        min_width_config = config.C_TREE_MIN_WIDTH_CONFIG
+
         for i in range(len(width_config)):
-            tree.column(i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
+            self.tree.column('%d' % i, width=width_config[i], minwidth=min_width_config[i], anchor='center')
 
-        # Show Button
-        self.button_search.pack(side='left', padx=10)
-        if status[0] == 'Admin':
-            self.button_update.pack(side='left', padx=10)
-            self.button_add.pack(side='left', padx=10)
-            self.button_delete.pack(side='left', padx=10)
-        self.button_frame.pack()
+        self.scrollbar.configure(command=self.tree.yview)
 
-        # Show Entry
-        self.entry_frame.pack()
+        self.scrollbar.pack(side='right', fill='y', pady=15)
+        self.tree.pack(side='left', padx=5, pady=15)
+
+
+
+
+
+
+
+
+
+        # Create Entry Frame
+        self.entry_frame = tk.Frame(self.main_frame)
+
+        # 1
+        self.label_id = tk.Label(self.entry_frame, text='Course ID', font=config.LABEL_FONT)
+        self.label_name = tk.Label(self.entry_frame, text='Name', font=config.LABEL_FONT)
+        self.label_teacher_id = tk.Label(self.entry_frame, text='Teacher ID', font=config.LABEL_FONT)
+        self.label_credit = tk.Label(self.entry_frame, text='Credit', font=config.LABEL_FONT)
+        self.label_grade = tk.Label(self.entry_frame, text='Grade', font=config.LABEL_FONT)
+        self.label_canceled_year = tk.Label(self.entry_frame, text='Canceled Year', font=config.LABEL_FONT)
+
+        # 2
+        self.entry_ID = tk.Entry(self.entry_frame, textvariable=self.id,
+                                 font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+        self.entry_Name = tk.Entry(self.entry_frame, textvariable=self.name,
+                                   font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+        self.entry_Teacher_ID = tk.Entry(self.entry_frame, textvariable=self.teacher_id,
+                                         font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+        self.entry_Credit = tk.Entry(self.entry_frame, textvariable=self.credit,
+                                     font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+        self.entry_Grade = tk.Entry(self.entry_frame, textvariable=self.grade,
+                                    font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+        self.entry_Canceled_Year = tk.Entry(self.entry_frame, textvariable=self.canceled_year,
+                                            font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+
+        # 3
+        self.button_search = tk.Button(self.entry_frame, text='Search', padx=10, pady=0, font=config.BUTTON_SMALL,
+                                       command=lambda: self.search())
+
+        # 1
         self.label_id.grid(row=0, column=0)
         self.label_name.grid(row=0, column=1)
         self.label_teacher_id.grid(row=0, column=2)
         self.label_credit.grid(row=0, column=3)
         self.label_grade.grid(row=0, column=4)
         self.label_canceled_year.grid(row=0, column=5)
+
+        # 2
         self.entry_ID.grid(row=1, column=0)
         self.entry_Name.grid(row=1, column=1)
         self.entry_Teacher_ID.grid(row=1, column=2)
@@ -86,174 +123,459 @@ class CourseView:
         self.entry_Grade.grid(row=1, column=4)
         self.entry_Canceled_Year.grid(row=1, column=5)
 
-        # Initial sheet data
-        with sqlite3.connect(database='Student Info.db') as db:
-            cursor = db.cursor()
-            SQL = '''SELECT * From Course'''
-            cursor.execute(SQL)
-            result = cursor.fetchall()
-            if len(tree.get_children()) > 0:
-                for item in tree.get_children():
-                    tree.delete(item)
-            for row in result:
-                tree.insert('', 'end', values=row)
-            cursor.close()
+        # 3
+        self.button_search.grid(row=1, column=6)
+
+
+
+
+
+
+
+        # Create Modification Frame
+        self.mod_frame = tk.Frame(self.main_frame)
+
+        # 1
+        self.label_mod_search_id_hint = tk.Label(self.mod_frame, text='Course ID', font=config.LABEL_FONT)
+        self.entry_mod_search_id = tk.Entry(self.mod_frame, textvariable=self.mod_search_id,
+                                            font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+        # 2
+        self.button_id_search = tk.Button(self.mod_frame, text='Search', font=config.BUTTON_MEDIUM,
+                                          command=lambda: self.id_search(), pady=2, padx=10)
+        self.button_update = tk.Button(self.mod_frame, text='Update', font=config.BUTTON_MEDIUM,
+                                       command=lambda: self.update(), pady=2, padx=10)
+        self.button_add = tk.Button(self.mod_frame, text='+', font=config.BUTTON_SIGN,
+                                    command=lambda: self.toggle_add(), pady=2, padx=10)
+        self.button_delete = tk.Button(self.mod_frame, text='-', font=config.BUTTON_SIGN,
+                                       command=lambda: self.delete(), pady=2, padx=10)
+
+        # 3
+        self.label_mod_search_id = tk.Label(self.mod_frame, text='---', font=config.ENTRY_FONT)
+        self.entry_mod_name = tk.Entry(self.mod_frame, textvariable=self.mod_name,
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+        self.entry_mod_teacher_id = tk.Entry(self.mod_frame, textvariable=self.mod_teacher_id,
+                                             font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+        self.entry_mod_credit = tk.Entry(self.mod_frame, textvariable=self.mod_credit,
+                                         font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+        self.entry_mod_grade = tk.Entry(self.mod_frame, textvariable=self.mod_grade,
+                                        font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+        self.entry_mod_canceled_year = tk.Entry(self.mod_frame, textvariable=self.mod_canceled_year,
+                                                font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+
+        # 4
+        self.label_mod_name_hint = tk.Label(self.mod_frame, text='Name', font=config.LABEL_FONT)
+        self.label_mod_teacher_id_hint = tk.Label(self.mod_frame, text='Teacher ID', font=config.LABEL_FONT)
+        self.label_mod_credit_hint = tk.Label(self.mod_frame, text='Credit', font=config.LABEL_FONT)
+        self.label_mod_grade_hint = tk.Label(self.mod_frame, text='Grade', font=config.LABEL_FONT)
+        self.label_mod_canceled_year_hint = tk.Label(self.mod_frame, text='Canceled Year', font=config.LABEL_FONT)
+
+        # 5
+        self.label_update_succeed_status = tk.Label(self.mod_frame, text='', font=config.EXCEPTION_FONT, fg='red')
+
+        # 1
+        self.label_mod_search_id_hint.grid(row=0, column=0)
+        self.entry_mod_search_id.grid(row=1, column=0)
+        # 2
+        self.button_id_search.grid(row=1, column=1, pady=13)
+        self.button_update.grid(row=1, column=2)
+        self.button_add.grid(row=1, column=3)
+        self.button_delete.grid(row=1, column=4)
+        # 3
+        self.label_mod_name_hint.grid(row=2, column=1)
+        self.label_mod_teacher_id_hint.grid(row=2, column=2)
+        self.label_mod_credit_hint.grid(row=2, column=3)
+        self.label_mod_grade_hint.grid(row=2, column=4)
+        self.label_mod_canceled_year_hint.grid(row=2, column=5)
+        # 4
+        self.label_mod_search_id.grid(row=3, column=0)
+        self.entry_mod_name.grid(row=3, column=1)
+        self.entry_mod_teacher_id.grid(row=3, column=2)
+        self.entry_mod_credit.grid(row=3, column=3)
+        self.entry_mod_grade.grid(row=3, column=4)
+        self.entry_mod_canceled_year.grid(row=3, column=5)
+        # 5
+        self.label_update_succeed_status.grid(row=1, column=5)
+
+
+
+
+
+
+
+
+
+        # Create Add Frame
+        self.add_frame = tk.Frame(self.main_frame)
+
+        # 1
+        self.label_add_id = tk.Label(self.add_frame, text='Course ID', font=config.LABEL_FONT)
+        self.label_add_name = tk.Label(self.add_frame, text='Name', font=config.LABEL_FONT)
+        self.label_add_teacher_id = tk.Label(self.add_frame, text='Teacher ID', font=config.LABEL_FONT)
+        self.label_add_credit = tk.Label(self.add_frame, text='Credit', font=config.LABEL_FONT)
+        self.label_add_grade = tk.Label(self.add_frame, text='Grade', font=config.LABEL_FONT)
+        self.label_add_canceled_year = tk.Label(self.add_frame, text='Canceled Year', font=config.LABEL_FONT)
+
+        # 2
+        self.entry_add_id = tk.Entry(self.add_frame, textvariable=self.add_id,
+                                     font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[0])
+        self.entry_add_name = tk.Entry(self.add_frame, textvariable=self.add_name,
+                                       font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[1])
+        self.entry_add_teacher_id = tk.Entry(self.add_frame, textvariable=self.add_teacher_id,
+                                             font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[2])
+        self.entry_add_credit = tk.Entry(self.add_frame, textvariable=self.add_credit,
+                                         font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[3])
+        self.entry_add_grade = tk.Entry(self.add_frame, textvariable=self.add_grade,
+                                        font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[4])
+        self.entry_add_canceled_year = tk.Entry(self.add_frame, textvariable=self.add_canceled_year,
+                                                font=config.ENTRY_FONT, width=config.S_ENTRY_WIDTH[5])
+
+        # 3
+        self.button_add_add = tk.Button(self.add_frame, text='+', font=config.BUTTON_MEDIUM,
+                                        command=lambda: self.insert())
+
+        # 4
+        self.label_add_success_status = tk.Label(self.add_frame, text='', font=config.EXCEPTION_FONT, fg='red')
+
+        # 1
+        self.label_add_id.grid(row=0, column=0)
+        self.label_add_name.grid(row=0, column=1)
+        self.label_add_teacher_id.grid(row=0, column=2)
+        self.label_add_credit.grid(row=0, column=3)
+        self.label_add_grade.grid(row=0, column=4)
+        self.label_add_canceled_year.grid(row=0, column=5)
+        # 2
+        self.entry_add_id.grid(row=1, column=0)
+        self.entry_add_name.grid(row=1, column=1)
+        self.entry_add_teacher_id.grid(row=1, column=2)
+        self.entry_add_credit.grid(row=1, column=3)
+        self.entry_add_grade.grid(row=1, column=4)
+        self.entry_add_canceled_year.grid(row=1, column=5)
+        # 3
+        self.button_add_add.grid(row=2, column=5)
+
+        # 4
+        self.label_add_success_status.grid(row=2, column=2)
+
+
+
+
+
+
+
+
+        # Pack Each Frame into Main Frame
+        self.entry_frame.pack(pady=2)
+        self.tree_frame.pack()
+
+        # Initialize Tree
+        self.search()
+
+        # Trace
+        # 1
+        self.mod_name.trace_add("write", self.reset_update_success_status)
+        self.mod_teacher_id.trace_add("write", self.reset_update_success_status)
+        self.mod_credit.trace_add("write", self.reset_update_success_status)
+        self.mod_grade.trace_add("write", self.reset_update_success_status)
+        self.mod_canceled_year.trace_add("write", self.reset_update_success_status)
+        # 2
+        self.add_id.trace_add("write", self.reset_add_success_status)
+        self.add_name.trace_add("write", self.reset_add_success_status)
+        self.add_teacher_id.trace_add("write", self.reset_add_success_status)
+        self.add_credit.trace_add("write", self.reset_add_success_status)
+        self.add_grade.trace_add("write", self.reset_add_success_status)
+        self.add_canceled_year.trace_add("write", self.reset_add_success_status)
+
+    # Show/Hide & Login/Logout
+    def show(self):
+        self.main_frame.pack()
 
     def hide(self):
-        for widget in self.button_frame.winfo_children():
-            widget.pack_forget()
-        self.entry_frame.pack_forget()
-        self.button_frame.pack_forget()
+        self.main_frame.pack_forget()
 
-    def search(self, tree):
+    def login(self, status):
+        if status[0] == 'Admin':
+            self.mod_frame.pack(pady=5)
+
+    def logout(self):
+        self.reset_all_tracking_var()
+        self.add_frame.pack_forget()
+        self.mod_frame.pack_forget()
+
+    # Search/ID Search/Add/Delete/Update
+    def search(self):
         search_id = self.id.get()
         name = self.name.get().title()
         teacher_id = self.teacher_id.get()
         credit = self.credit.get()
-        grade = self.grade.get().upper()
-        cancel_year = self.canceled_year.get()
+        grade = self.grade.get()
+        canceled_year = self.canceled_year.get()
 
         with sqlite3.connect(database='Student Info.db') as db:
-            has_constraint = False
+            has_where = False
             temp_cursor = db.cursor()
             SQL = '''SELECT * From Course '''
             if search_id:
-                if not has_constraint:
-                    SQL += '''
-                    WHERE "Course ID" = '%s' ''' % search_id
-                    has_constraint = True
-                else:
-                    SQL += '''
-                    AND "Course ID" = '%s' ''' % search_id
-            if name:
-                if has_constraint:
-                    SQL += '''
-                    AND "Name" = '%s' ''' % name
-                else:
-                    SQL += '''
-                    WHERE "Name" = '%s' ''' % name
-                    has_constraint = True
-            if teacher_id:
-                if has_constraint:
-                    SQL += '''
-                    AND "Teacher ID" = '%s' ''' % teacher_id
-                else:
-                    SQL += '''
-                    WHERE "Teacher ID" = '%s' ''' % teacher_id
-            if credit:
-                if has_constraint:
-                    SQL += '''
-                    AND "Credit" = '%s' ''' % credit
-                else:
-                    SQL += '''
-                    WHERE "Credit" = '%s' ''' % credit
-            if grade:
-                if has_constraint:
-                    SQL += '''
-                    AND "Grade" = '%s' ''' % grade
-                else:
-                    SQL += '''
-                    WHERE "Grade" = '%s' ''' % grade
-            if cancel_year:
-                if has_constraint:
-                    SQL += '''
-                    AND "Canceled Year" = '%s' ''' % cancel_year
-                else:
-                    SQL += '''
-                    WHERE "Canceled Year" = '%s' ''' % cancel_year
+                SQL += '''
+WHERE "Course ID" LIKE '%''' + '''%s''' % search_id + "'"
+                has_where = True
 
+            if name:
+                if has_where:
+                    SQL += '''
+    AND "Name" LIKE '%''' + '''%s''' % name + "%'"
+                else:
+                    SQL += '''
+WHERE "Name" LIKE '%''' + '''%s''' % name + "%'"
+                    has_where = True
+            if teacher_id:
+                if has_where:
+                    SQL += '''
+    AND "Teacher ID" LIKE ''' + "'%" + '''%s''' % teacher_id + "'"
+                else:
+                    SQL += '''
+WHERE "Teacher ID" LIKE ''' + "'%" + '''%s''' % teacher_id + "'"
+                    has_where = True
+
+            if credit:
+                if has_where:
+                    SQL += '''
+    AND "Credit" = '%s' ''' % credit
+                else:
+                    SQL += '''
+WHERE "Credit" = '%s' ''' % credit
+                    has_where = True
+
+            if grade:
+                if has_where:
+                    SQL += '''
+    AND "Grade" = ''' + "'" + '''%s''' % grade + "'"
+                else:
+                    SQL += '''
+WHERE "Grade" = ''' + "'" + '''%s''' % grade + "'"
+                    has_where = True
+
+            if canceled_year:
+                if has_where:
+                    SQL += '''
+    AND "Canceled Year" LIKE ''' + "'%" + '''%s''' % canceled_year + "'"
+                else:
+                    SQL += '''
+WHERE "Canceled Year" LIKE ''' + "'%" + '''%s''' % canceled_year + "'"
+
+            print(SQL)
             temp_cursor.execute(SQL)
             temp_result = temp_cursor.fetchall()
             temp_cursor.close()
-            if len(tree.get_children()) > 0:
-                for item in tree.get_children():
-                    tree.delete(item)
+
+            self.clear_tree()
             for temp_row in temp_result:
-                tree.insert('', 'end', values=temp_row)
+                self.tree.insert('', 'end', values=temp_row)
 
-    def delete(self, tree):
-        generated_id = self.id.get()
-
+    def id_search(self):
+        search_id = self.mod_search_id.get()
         with sqlite3.connect(database='Student Info.db') as db:
             temp_cursor = db.cursor()
-            SQL = '''DELETE From Course WHERE "Course ID" = '%s' ''' % generated_id
+            SQL = '''SELECT * From Course 
+WHERE "Course ID" = '%s' ''' % search_id
+
+            print(SQL)
+            temp_cursor.execute(SQL)
+            temp_result = temp_cursor.fetchall()
+            temp_cursor.close()
+            if temp_result:
+                self.current_selected_id = temp_result[0][0]
+                self.label_mod_search_id.configure(text=temp_result[0][0])
+                self.mod_name.set(temp_result[0][1])
+                self.mod_teacher_id.set(temp_result[0][2])
+                self.mod_credit.set(temp_result[0][3])
+                self.mod_grade.set(temp_result[0][4])
+                if temp_result[0][5] == 'None':
+                    self.mod_canceled_year.set('')
+                else:
+                    self.mod_canceled_year.set(temp_result[0][5])
+            else:
+                self.set_id_search_result()
+
+    def insert(self):
+        search_id = self.add_id.get()
+        name = self.add_name.get().title()
+        teacher_id = self.add_teacher_id.get()
+        credit = self.add_credit.get()
+        grade = self.add_grade.get()
+        canceled_year = self.add_canceled_year.get()
+
+        succeed = True
+        try:
+            with sqlite3.connect(database='Student Info.db') as db:
+                temp_cursor = db.cursor()
+                SQL = '''INSERT INTO Course 
+VALUES ('''
+                if search_id:
+                    SQL += "%s, " % search_id
+                else:
+                    SQL += "null, "
+
+                if name:
+                    SQL += "'%s', " % name
+                else:
+                    SQL += "null, "
+
+                if teacher_id:
+                    SQL += "%s, " % teacher_id
+                else:
+                    SQL += "null, "
+
+                if credit:
+                    SQL += "%s, " % credit
+                else:
+                    SQL += "null, "
+
+                if grade:
+                    SQL += "%s, " % grade
+                else:
+                    SQL += "null, "
+
+                if canceled_year == '':
+                    SQL += '''null)'''
+                else:
+                    SQL += ''''%s')''' % canceled_year
+
+                print(SQL)
+                temp_cursor.execute(SQL)
+                temp_cursor.close()
+        except sqlite3.Error:
+            self.label_add_success_status.config(text='Error: illegal format')
+            succeed = False
+
+        if succeed:
+            self.label_add_success_status.config(text='')
+            self.search()
+
+    def delete(self):
+        search_id = self.current_selected_id
+        if search_id == '---':
+            return
+        with sqlite3.connect(database='Student Info.db') as db:
+            temp_cursor = db.cursor()
+            SQL = '''DELETE From Course WHERE "Course ID" = '%s' ''' % search_id
+            print(SQL)
             temp_cursor.execute(SQL)
             temp_cursor.close()
+        self.set_id_search_result()
+        self.search()
+
+    def update(self):
+        if self.current_selected_id == '---':
+            return
+        search_id = self.current_selected_id
+        name = self.mod_name.get().title()
+        teacher_id = self.mod_teacher_id.get()
+        credit = self.mod_credit.get()
+        grade = self.mod_grade.get()
+        canceled_year = self.mod_canceled_year.get()
+
+        succeed = True
+        try:
+            with sqlite3.connect(database='Student Info.db') as db:
+                temp_cursor = db.cursor()
+                SQL = '''UPDATE Course'''
+                if name:
+                    SQL += '''SET "Name" = '%s',
+''' % name
+                else:
+                    SQL += '''SET "Name" = null,
+'''
+
+                if teacher_id:
+                    SQL += '''"Teacher ID" = '%s',
+''' % teacher_id
+                else:
+                    SQL += '''"Teacher ID" = null,
+'''
+                if credit:
+                    SQL += '''"Credit" = '%s',
+''' % credit
+                else:
+                    SQL += '''"Credit" = null,
+'''
+                if grade:
+                    SQL += '''"Grade" = '%s',
+''' % grade
+                else:
+                    SQL += '''"Grade" = null,
+'''
+                if canceled_year == '':
+                    SQL += '''"Canceled Year" = null
+'''
+                else:
+                    SQL += '''"Canceled Year" = '%s'
+''' % canceled_year
+                SQL += '''WHERE "Course ID" = '%s' ''' % search_id
+
+                print(SQL)
+                temp_cursor.execute(SQL)
+                temp_cursor.close()
+        except sqlite3.Error:
+            self.label_update_succeed_status.config(text='Error: illegal format')
+            succeed = False
+
+        if succeed:
+            self.label_update_succeed_status.config(text='')
+            self.search()
+
+    def set_id_search_result(self, _id='---', _name='', _teacher_id='',
+                             _credit='', _grade='', _canceled_year=''):
+        self.current_selected_id = _id
+        self.label_mod_search_id.configure(text=_id)
+        self.mod_name.set(_name)
+        self.mod_teacher_id.set(_teacher_id)
+        self.mod_credit.set(_credit)
+        self.mod_grade.set(_grade)
+        self.mod_canceled_year.set(_canceled_year)
+
+    # Toggle Add Frame
+    def toggle_add(self):
+        if self.add_expanded:
+            self.add_frame.pack_forget()
+            self.add_expanded = False
+        else:
+            self.add_frame.pack(pady=20)
+            self.add_expanded = True
+
+    # Reset stuffs
+    def clear_tree(self):
+        if len(self.tree.get_children()) > 0:
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+
+    def reset_update_success_status(self, var, index, mode):
+        self.label_update_succeed_status.config(text='')
+        return var, index, mode
+
+    def reset_add_success_status(self, var, index, mode):
+        self.label_add_success_status.config(text='')
+        return var, index, mode
+
+    def reset_all_tracking_var(self):
+        self.add_expanded = False
+        self.clear_tree()
+
         self.id.set('')
-        self.search(tree)
+        self.name.set('')
+        self.teacher_id.set('')
+        self.credit.set('')
+        self.grade.set('')
+        self.canceled_year.set('')
 
-    def update(self, tree):
-        search_id = self.id.get()
-        name = self.name.get().title()
-        teacher_id = self.teacher_id.get()
-        credit = self.credit.get()
-        grade = self.grade.get().upper()
-        cancel_year = self.canceled_year.get()
+        self.mod_search_id.set('')
+        self.set_id_search_result()
 
-        with sqlite3.connect(database='Student Info.db') as db:
-            temp_cursor = db.cursor()
-            SQL = '''PRAGMA foreign_keys = ON;'''
-            temp_cursor.execute(SQL)
+        self.add_id.set('')
+        self.add_name.set('')
+        self.add_teacher_id.set('')
+        self.add_credit.set('')
+        self.add_grade.set('')
+        self.add_canceled_year.set('')
 
-            SQL = '''UPDATE Course 
-            SET '''
-            if name:
-                SQL += '''
-                    "Name" = '%s',''' % name
-            if teacher_id:
-                SQL += '''
-                    "Teacher ID" = '%s',''' % teacher_id
-            if credit:
-                SQL += '''
-                    "Credit" = '%s',''' % credit
-            if grade:
-                SQL += '''
-                    "Grade" = '%s' ''' % grade
-            if cancel_year:
-                SQL += ''',
-                    "Canceled Year" = '%s' ''' % cancel_year
-            else:
-                SQL += ''',
-                                    "Canceled Year" = null '''
-
-            SQL += '''
-            WHERE "Course ID" = '%s' ''' % search_id
-            temp_cursor.execute(SQL)
-            temp_cursor.close()
-        self.search(tree)
-
-    def insert(self, tree):
-        search_id = self.id.get()
-        name = self.name.get().title()
-        teacher_id = self.teacher_id.get()
-        credit = self.credit.get()
-        grade = self.grade.get().upper()
-        cancel_year = self.canceled_year.get()
-
-        with sqlite3.connect(database='Student Info.db') as db:
-            temp_cursor = db.cursor()
-            SQL = '''PRAGMA foreign_keys = ON;'''
-            temp_cursor.execute(SQL)
-
-            SQL = '''INSERT INTO Course VALUES( '''
-            SQL += '''
-                '%s',''' % search_id
-            SQL += '''
-                '%s',''' % name
-            SQL += '''
-                '%s',''' % teacher_id
-            SQL += '''
-                '%s',''' % credit
-            SQL += '''
-                '%s',''' % grade
-            if cancel_year:
-                SQL += '''
-                    '%s')''' % cancel_year
-            else:
-                SQL += '''
-                        NULL)'''
-            temp_cursor.execute(SQL)
-            temp_cursor.close()
-        self.search(tree)
-            
-    
+        self.reset_update_success_status('', '', '')
+        self.reset_add_success_status('', '', '')

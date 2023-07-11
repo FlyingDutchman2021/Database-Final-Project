@@ -78,51 +78,26 @@ class MainWindow:
 
 
 
-        # Create Table
-        self.tree_frame = tk.Frame(self.window)
-        self.scrollbar = tk.Scrollbar(self.tree_frame)
-        self.tree = ttk.Treeview(self.tree_frame, yscrollcommand=self.scrollbar.set,
-                                 columns=('0', '1', '2', '3', '4', '5', '6', '7'),
-                                 show='headings',
-                                 height=10)
-        style = ttk.Style()
-        style.configure('Treeview.Heading', font=('Arial', 18))
-        style.configure('Treeview', font=('Arial', 18))
-        style.configure('Treeview', rowheight=28)
-
-        self.scrollbar.configure(command=self.tree.yview)
-
-        # Show Table
-        self.scrollbar.pack(side='right', fill='y', pady=15)
-        self.tree.pack(side='left', padx=5, pady=15)
-
-
-
-
-
-
-
-
         # Create Student Info Manager Box
         self.student_view = StudentView.StudentView(self.window)
 
         self.teacher_view = TeacherView.TeacherView(self.window)
 
-        self.course_view = CourseView.CourseView(self.window, self.tree)
+        self.course_view = CourseView.CourseView(self.window)
 
-        self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.status)
-
-
-        self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window, self.tree)
+        # self.choose_view = ChooseView.ChooseView(self.window, self.tree, self.status)
 
 
-
-        self.student_detail_view = StudentCourseView.StudentCourseView(self.window, self.tree)
-
-        self.student_score_view = StudentScoreView.StudentScoreView(self.window, self.tree)
+        # self.choose_detail_view = ChooseDetailView.ChooseDetailView(self.window, self.tree)
 
 
-        self.AVG_view = AVGView.AVGView(self.window, self.tree)
+
+        # self.student_detail_view = StudentCourseView.StudentCourseView(self.window, self.tree)
+
+        # self.student_score_view = StudentScoreView.StudentScoreView(self.window, self.tree)
+
+
+        # self.AVG_view = AVGView.AVGView(self.window, self.tree)
 
 
 
@@ -143,6 +118,7 @@ class MainWindow:
         # Login all window TODO FILL
         self.student_view.login(self.status)
         self.teacher_view.login(self.status)
+        self.course_view.login(self.status)
 
 
         # Show default page
@@ -157,9 +133,7 @@ class MainWindow:
         # Logout all window TODO FILL
         self.student_view.logout()
         self.teacher_view.logout()
-
-        # -- #
-        self.tree_frame.pack_forget()
+        self.course_view.logout()
 
         # Show Login
         self.login_view.show()
@@ -177,7 +151,7 @@ class MainWindow:
     def switch_course(self):
         self.current_window.hide()
         self.current_window = self.course_view
-        self.current_window.show(self.tree, status=self.status)
+        self.current_window.show()
 
     def switch_choose(self):
         self.current_window.hide()
