@@ -76,6 +76,8 @@ class ChooseDetailView:
         self.scrollbar.pack(side='right', fill='y', pady=15)
         self.tree.pack(side='left', padx=5, pady=15)
 
+
+
         # Create Entry Frame
         self.entry_frame = tk.Frame(self.main_frame)
 

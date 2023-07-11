@@ -24,7 +24,7 @@ class MainWindow:
         full_width = self.window.winfo_screenwidth()
         full_height = self.window.winfo_screenheight()
         width_percentage = 0.82
-        height_percentage = 0.76
+        height_percentage = 0.79
         self.window.geometry(
             '%dx%d+%d+%d' % (full_width * width_percentage, full_height * height_percentage,
                              full_width * (1 - width_percentage) / 2,
@@ -51,7 +51,7 @@ class MainWindow:
         self.button_switch_course = tk.Button(self.navigation_bar, text='Course',
                                               command=lambda: self.switch_course(),
                                               font=config.BUTTON_SMALL)
-        self.button_switch_choose_detail = tk.Button(self.navigation_bar, text='Choose Detail',
+        self.button_switch_choose_detail = tk.Button(self.navigation_bar, text='Course Choosing',
                                                      command=lambda: self.switch_choose_detail(),
                                                      font=config.BUTTON_SMALL)
         self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',

@@ -197,7 +197,7 @@ class CourseView:
         self.entry_mod_grade.grid(row=3, column=4)
         self.entry_mod_canceled_year.grid(row=3, column=5)
         # 5
-        self.label_update_succeed_status.grid(row=2, column=4)
+        self.label_update_succeed_status.grid(row=4, column=3)
 
 
 
