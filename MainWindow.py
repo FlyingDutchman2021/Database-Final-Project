@@ -7,6 +7,7 @@ import TeacherView
 import CourseView
 import ChooseDetailView
 import AVGView
+import config
 
 
 class MainWindow:
@@ -39,17 +40,23 @@ class MainWindow:
         # Create Navigation Bar
         self.navigation_bar = tk.Frame(self.window)
 
-        self.button_back = tk.Button(self.navigation_bar, text='Back', command=lambda: self.hide_main_window())
+        self.button_back = tk.Button(self.navigation_bar, text='Back', command=lambda: self.hide_main_window(),
+                                     font=config.BUTTON_SMALL)
         self.button_switch_student = tk.Button(self.navigation_bar, text='Student',
-                                               command=lambda: self.switch_student())
+                                               command=lambda: self.switch_student(),
+                                               font=config.BUTTON_SMALL)
         self.button_switch_teacher = tk.Button(self.navigation_bar, text='Teacher',
-                                               command=lambda: self.switch_teacher())
+                                               command=lambda: self.switch_teacher(),
+                                               font=config.BUTTON_SMALL)
         self.button_switch_course = tk.Button(self.navigation_bar, text='Course',
-                                              command=lambda: self.switch_course())
+                                              command=lambda: self.switch_course(),
+                                              font=config.BUTTON_SMALL)
         self.button_switch_choose_detail = tk.Button(self.navigation_bar, text='Choose Detail',
-                                                     command=lambda: self.switch_choose_detail())
+                                                     command=lambda: self.switch_choose_detail(),
+                                                     font=config.BUTTON_SMALL)
         self.button_switch_AVG = tk.Button(self.navigation_bar, text='Average Score',
-                                           command=lambda: self.switch_AVG())
+                                           command=lambda: self.switch_AVG(),
+                                           font=config.BUTTON_SMALL)
 
 
         self.button_back.pack(side='left')
