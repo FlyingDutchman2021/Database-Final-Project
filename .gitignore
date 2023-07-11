@@ -8,3 +8,11 @@
 __pycache__/multi_view_system.cpython-311.pyc
 *.pages
 .DS_Store
+__pycache__/AVGView.cpython-311.pyc
+__pycache__/ChooseDetailView.cpython-311.pyc
+__pycache__/config.cpython-311.pyc
+__pycache__/CourseView.cpython-311.pyc
+__pycache__/LoginView.cpython-311.pyc
+__pycache__/MainWindow.cpython-311.pyc
+__pycache__/StudentView.cpython-311.pyc
+__pycache__/TeacherView.cpython-311.pyc
